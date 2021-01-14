@@ -38,7 +38,7 @@ export default {
       while(rest.length>0){
         const colored= rest.match(/[0-9]*[spzm]/);
         const matchStr=colored[0];
-        result[matchStr[matchStr.length-1]]=matchStr.substr(0,matchStr.length-1).split('');
+        result[matchStr[matchStr.length-1]]=result[matchStr[matchStr.length-1]].concat(matchStr.substr(0,matchStr.length-1).split(''));
         rest=rest.substr(0,colored.index)+rest.substr(colored.index+matchStr.length);
       }
       return result;
