@@ -1,6 +1,7 @@
 {
-  "name": "majhong",
+  "name": "mahjong",
   "version": "0.0.0",
+  "homepage": "https://paxyqi.github.io/mahjong/",
   "scripts": {
     "dev": "vite",
     "build": "vite build"
@@ -11,6 +12,5 @@
   "devDependencies": {
     "vite": "^1.0.0-rc.13",
     "@vue/compiler-sfc": "^3.0.4"
-  },
-  "homepage": "https://paxyqi.github.io/mahjong/"
+  }
 }
