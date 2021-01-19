@@ -31,8 +31,7 @@ jobs:
           npm install
           npm run build
       
-      - name: NPM install cache
-        uses: c-hive/gha-npm-cache@v1
+      
 
       # Runs a single command using the runners shell
       - name: Deploy
@@ -43,3 +42,5 @@ jobs:
           FOLDER: dist # 存放build后产物的目录
           CLEAN: true 
 
+      - name: NPM install cache
+        uses: c-hive/gha-npm-cache@v1
