@@ -26,7 +26,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: buildAndDeploy
-        uses: JamesIves/github-pages-deploy-action@master 
+        uses: JamesIves/github-pages-deploy-action@main
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages # 存放产物的分支名称
