@@ -1,4 +1,5 @@
 module.exports = {
     outputDir: 'dist',
-    base:'/mahjong/'
+    base:'/mahjong/',
+    assetsDir: 'assets'
 }
