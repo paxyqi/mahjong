@@ -28,10 +28,11 @@ export default {
   methods:{
     showCards(){
       const tails = this.splitTiles(this.handCards);
-      console.log(tails);
       this.handCardsImg = this.showHandCards(tails);
       const arr = this.transArr(tails);
+      console.log(arr);
       this.Syanten = this.calculateSyanten(arr);
+      this.improve(arr);
     },
     splitTiles(handCard){
       const result={
@@ -229,6 +230,38 @@ export default {
       
       return res
     },
+    //从14张牌中任选一张，再摸如一张能够改良向听的牌。当前牌面为arr，因此只需对arr进行操作后，再次将新arr进行计算，若改良成功则保留
+    improve(arr){
+      for(let i=0; i<4; i++){
+        for(let j=0; j<arr[i].length; j++){
+          if(arr[i][j] > 0){
+            debugger
+            let change = this.exchange(arr,i,j);
+          } 
+        }
+      }
+    },
+    //打掉arr[i][j]的牌，用其他牌替换---共有33种替换的可能？剪枝？挨个试吧？
+    exchange(arr,i,j){
+      let preSyanten = this.calculateSyanten(arr);
+      arr[i][j]--;
+      let tmpi = 0,tmpj = 0;
+      let res = new Array;
+      for(let p = 0; p < 4; p++){
+        for(let q = 0; q < arr[p].length; q++){
+          arr[p][q]++;
+          let currSyanten = this.calculateSyanten(arr);
+          if(currSyanten < preSyanten){
+            let couple = {i : p, j : q};//有改良即可
+            res.push(couple);
+          }
+          arr[p][q]--;
+        }
+      }
+      return res;
+    }
+    
+
   }
 }
 </script>
