@@ -60,37 +60,17 @@ export default {
     },
     showHandCards (tails) {
       this.handCardsImg = '';
-      let i;
-      const newTailsM = tails.m.map((num) => {
-        if (num === '0') {
-          return '5';
-        } else {
-          return num;
-        }
-      });
-      const newTailsP = tails.p.map((num) => {
-        if (num === '0') {
-          return '5';
-        } else {
-          return num;
-        }
-      });
-      const newTailsS = tails.s.map((num) => {
-        if (num === '0') {
-          return '5';
-        } else {
-          return num;
-        }
-      });
-      const newTailsZ = tails.z.map((num) => {
-        if (num === '0') {
-          return '5';
-        } else {
-          return num;
-        }
-      });
+      // let i;
+      const newTailsM = tails.m.map((num) => num === '0' ? '5' : num);
+      const newTailsP = tails.p.map((num) => num === '0' ? '5' : num);
+      const newTailsS = tails.s.map((num) => num === '0' ? '5' : num);
+      const newTailsZ = tails.z.map((num) => num === '0' ? '5' : num);
       console.log(newTailsM.sort());
-      for (i = 0; i < tails.m.length; i++) {
+      this.handCardsImg += newTailsM.sort().reduce((a, b) => a + tiles[b - 1], '');
+      this.handCardsImg += tiles.p.reduce((a, _, i) => a + String(newTailsP.sort()[i] - 1), '');
+      this.handCardsImg += tiles.s.reduce((a, _, i) => a + String(newTailsS.sort()[i] - 1), '');
+      this.handCardsImg += tiles.z.reduce((a, _, i) => a + String(newTailsZ.sort()[i] - 1), '');
+      /* for (i = 0; i < tails.m.length; i++) {
         this.handCardsImg += tiles.m[newTailsM.sort()[i] - 1];
       }
       for (i = 0; i < tails.p.length; i++) {
@@ -101,7 +81,7 @@ export default {
       }
       for (i = 0; i < tails.z.length; i++) {
         this.handCardsImg += tiles.z[newTailsZ.sort()[i] - 1];
-      }
+      } */
       return this.handCardsImg;
     },
     transArr (CardString) {
@@ -133,8 +113,7 @@ export default {
     calculateSyanten (t) {
       // 24m1556p2459s4572z syanten = 8-2*mentsu-tatsu
       let res = 9;
-      let mentsu, tatsu, alone, furo; // 面子，搭子,单张，副露
-      mentsu = tatsu = alone = furo = 0;
+      let mentsu = 0; let tatsu = 0; let alone = 0; const furo = 0; // 面子，搭子,单张，副露
       const search = (arr, isJihai = false) => {
         let tmp1 = [0, 0, 0];
         let tmp2 = [0, 0, 0];
