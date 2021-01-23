@@ -60,16 +60,10 @@ export default {
     },
     showHandCards (tails) {
       this.handCardsImg = '';
-      // let i;
-      const newTailsM = tails.m.map((num) => num === '0' ? '5' : num);
-      const newTailsP = tails.p.map((num) => num === '0' ? '5' : num);
-      const newTailsS = tails.s.map((num) => num === '0' ? '5' : num);
-      const newTailsZ = tails.z.map((num) => num === '0' ? '5' : num);
-      console.log(newTailsM.sort());
-      this.handCardsImg += newTailsM.sort().reduce((a, b) => a + tiles[b - 1], '');
-      this.handCardsImg += tiles.p.reduce((a, _, i) => a + String(newTailsP.sort()[i] - 1), '');
-      this.handCardsImg += tiles.s.reduce((a, _, i) => a + String(newTailsS.sort()[i] - 1), '');
-      this.handCardsImg += tiles.z.reduce((a, _, i) => a + String(newTailsZ.sort()[i] - 1), '');
+      this.handCardsImg += tails.m.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tiles.m[b - 1], '');
+      this.handCardsImg += tails.p.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tiles.p[b - 1], '');
+      this.handCardsImg += tails.s.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tiles.s[b - 1], '');
+      this.handCardsImg += tails.z.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tiles.z[b - 1], '');
       /* for (i = 0; i < tails.m.length; i++) {
         this.handCardsImg += tiles.m[newTailsM.sort()[i] - 1];
       }
