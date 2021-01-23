@@ -41,7 +41,10 @@ jobs:
           npm install
           npm run build
 
-      # Runs a single command using the runners shell
+      - name: Lint
+        run: |
+          npm run lint
+
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
