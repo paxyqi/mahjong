@@ -130,14 +130,6 @@ export default {
       const arr = [[...arrM], [...arrP], [...arrS], [...arrZ]];
       return arr;
     },
-    sum (arr) {
-      // 当前花型有几张牌
-      let s = 0;
-      for (let i = 0; i < arr.length; i++) {
-        s += arr[i];
-      }
-      return s;
-    },
     calculateSyanten (t) {
       // 24m1556p2459s4572z syanten = 8-2*mentsu-tatsu
       let res = 9;
@@ -146,127 +138,125 @@ export default {
       const search = (arr, isJihai = false) => {
         let tmp1 = [0, 0, 0];
         let tmp2 = [0, 0, 0];
-        {
-          // 先算面子，再算顺子
-          const arr1 = [...arr];
-          let tmpMentsu = 0;
-          let tmpTatsu = 0;
-          let tmpAlone = 0;
-          for (let i = 0; i < 9; i++) {
-            if (arr1[i] === 0 || arr1[i] === undefined) {
-              continue;
-            }
-            if (arr1[i] >= 3) {
-              // 三个一万
-              arr[i] -= 3;
+
+        // 先算面子，再算顺子
+        const arr1 = [...arr];
+        let tmpMentsu = 0;
+        let tmpTatsu = 0;
+        let tmpAlone = 0;
+        for (let i = 0; i < 9; i++) {
+          if (arr1[i] === 0 || arr1[i] === undefined) {
+            continue;
+          }
+          if (arr1[i] >= 3) {
+            // 三个一万
+            arr1[i] -= 3;
+            tmpMentsu++;
+          }
+          if (arr1[i] > 0) {
+            // 考虑有1个顺子，或两个顺子
+            if (isJihai) continue; // 字牌没有顺子
+            if (arr1[i + 1] > 0 && arr1[i + 2] > 0) {
+              // 顺子
+              arr1[i]--;
+              arr1[i + 1]--;
+              arr1[i + 2]--;
               tmpMentsu++;
             }
-            if (arr1[i] > 0) {
-              // 考虑有1个顺子，或两个顺子
-              if (isJihai) continue; // 字牌没有顺子
-              if (arr1[i + 1] > 0 && arr1[i + 2] > 0) {
-                // 顺子
-                arr1[i]--;
-                arr1[i + 1]--;
-                arr1[i + 2]--;
-                tmpMentsu++;
-              }
-              if (arr1[i] > 0 && arr1[i + 1] > 0 && arr1[i + 2] > 0) {
-                arr1[i]--;
-                arr1[i + 1]--;
-                arr1[i + 2]--;
-                tmpMentsu++;
-              }
+            if (arr1[i] > 0 && arr1[i + 1] > 0 && arr1[i + 2] > 0) {
+              arr1[i]--;
+              arr1[i + 1]--;
+              arr1[i + 2]--;
+              tmpMentsu++;
             }
           }
-          for (let i = 0; i < 9; i++) {
-            if (arr1[i] === 0 || arr1[i === undefined]) {
-              continue;
-            } else if (arr[i] === 2) {
-              arr1[i] -= 2;
-              tmpTatsu++; // 两个一万 搭子
-              continue;
-            } else {
-              if (isJihai) continue;
-              if (arr1[i + 1] > 0) {
-                // 12
-                arr1[i]--;
-                arr1[i + 1]--;
-                tmpTatsu++;
-              }
-              if (arr1[i + 2] > 0) {
-                // 13
-                arr1[i]--;
-                arr1[i + 2]--;
-                tmpTatsu++;
-              }
-            }
-          }
-          tmpAlone += this.sum(arr1); // 剩余的为单张
-          tmp1 = [tmpMentsu, tmpTatsu, tmpAlone];
         }
-        {
-          // 先算顺子，再算面子
-          const arr2 = [...arr];
-          let tmpMentsu = 0;
-          let tmpTatsu = 0;
-          let tmpAlone = 0;
-          for (let i = 0; i < 9; i++) {
-            if (arr2[i] === 0 || arr2[i] === undefined) {
-              continue;
+        for (let i = 0; i < 9; i++) {
+          if (arr1[i] === 0 || arr1[i] === undefined) {
+            continue;
+          } else if (arr[i] === 2) {
+            arr1[i] -= 2;
+            tmpTatsu++; // 两个一万 搭子
+            continue;
+          } else {
+            if (isJihai) continue;
+            if (arr1[i + 1] > 0) {
+              // 12
+              arr1[i]--;
+              arr1[i + 1]--;
+              tmpTatsu++;
             }
-            if (!isJihai) {
-              // 非字牌有顺子，考虑有2个顺子或者4个顺子
-              if (arr2[i] >= 2 && arr2[i + 1] >= 2 && arr2[i + 2] >= 2) {
-                arr2[i] -= 2;
-                arr2[i + 1] -= 2;
-                arr2[i + 2] -= 2;
-                tmpMentsu += 2;
-              }
-              if (arr2[i] >= 2 && arr2[i + 1] >= 2 && arr2[i + 2] >= 2) {
-                arr2[i] -= 2;
-                arr2[i + 1] -= 2;
-                arr2[i + 2] -= 2;
-                tmpMentsu += 2;
-              }
+            if (arr1[i + 2] > 0) {
+              // 13
+              arr1[i]--;
+              arr1[i + 2]--;
+              tmpTatsu++;
             }
-            if (arr2[i] === 3 || arr2[i] === 4) {
-              arr2[i] -= 3;
-              tmpMentsu++;
-            }
-            if (arr2[i] === 2) {
+          }
+        }
+        tmpAlone += arr1.reduce((a, b) => a + b); // 剩余的为单张
+        tmp1 = [tmpMentsu, tmpTatsu, tmpAlone];
+
+        // 先算顺子，再算面子
+        const arr2 = [...arr];
+        tmpMentsu = 0;
+        tmpTatsu = 0;
+        tmpAlone = 0;
+        for (let i = 0; i < 9; i++) {
+          if (arr2[i] === 0 || arr2[i] === undefined) {
+            continue;
+          }
+          if (!isJihai) {
+            // 非字牌有顺子，考虑有2个顺子或者4个顺子
+            if (arr2[i] >= 2 && arr2[i + 1] >= 2 && arr2[i + 2] >= 2) {
               arr2[i] -= 2;
-              tmpTatsu++;
+              arr2[i + 1] -= 2;
+              arr2[i + 2] -= 2;
+              tmpMentsu += 2;
             }
-            if (isJihai) {
-              continue;
-            }
-            if (arr2[i] > 0 && arr2[i + 1] > 0 && arr2[i + 2] > 0) {
-              // 3个顺子或1个顺子
-              arr2[i]--;
-              arr2[i + 1]--;
-              arr2[i + 2]--;
-              tmpMentsu++;
-            }
-            if (arr2[i] > 0 && arr2[i + 1] > 0) {
-              arr2[i]--;
-              arr2[i + 1]--;
-              tmpTatsu++;
-            }
-            if (arr2[i] > 0 && arr2[i + 2] > 0) {
-              arr2[i]--;
-              arr2[i + 2]--;
-              tmpTatsu++;
+            if (arr2[i] >= 2 && arr2[i + 1] >= 2 && arr2[i + 2] >= 2) {
+              arr2[i] -= 2;
+              arr2[i + 1] -= 2;
+              arr2[i + 2] -= 2;
+              tmpMentsu += 2;
             }
           }
-          tmpAlone += this.sum(arr2);
-          tmp2 = [tmpMentsu, tmpTatsu, tmpAlone];
+          if (arr2[i] === 3 || arr2[i] === 4) {
+            arr2[i] -= 3;
+            tmpMentsu++;
+          }
+          if (arr2[i] === 2) {
+            arr2[i] -= 2;
+            tmpTatsu++;
+          }
+          if (isJihai) {
+            continue;
+          }
+          if (arr2[i] > 0 && arr2[i + 1] > 0 && arr2[i + 2] > 0) {
+            // 3个顺子或1个顺子
+            arr2[i]--;
+            arr2[i + 1]--;
+            arr2[i + 2]--;
+            tmpMentsu++;
+          }
+          if (arr2[i] > 0 && arr2[i + 1] > 0) {
+            arr2[i]--;
+            arr2[i + 1]--;
+            tmpTatsu++;
+          }
+          if (arr2[i] > 0 && arr2[i + 2] > 0) {
+            arr2[i]--;
+            arr2[i + 2]--;
+            tmpTatsu++;
+          }
         }
+        tmpAlone += arr2.reduce((a, b) => a + b);
+        tmp2 = [tmpMentsu, tmpTatsu, tmpAlone];
+
         const tmp = tmp1 >= tmp2 ? tmp1 : tmp2;
         mentsu += tmp[0];
         tatsu += tmp[1];
         alone += tmp[2];
-        return true;
       };
       const calc = () => {
         let tmpRes = -1;
@@ -299,11 +289,11 @@ export default {
         mentsu = tatsu = alone = 0;
       };
 
-      search(t[0]) &&
-        search(t[1]) &&
-        search(t[2]) &&
-        search(t[3], true) &&
-        calc();
+      search(t[0]);
+      search(t[1]);
+      search(t[2]);
+      search(t[3], true);
+      calc();
 
       return res;
     },
