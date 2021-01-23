@@ -10,7 +10,7 @@
 </template>
 
 <script>
-const tiles = {
+const tilesImage = {
   m: ['🀇', '🀈', '🀉', '🀊', '🀋', '🀌', '🀍', '🀎', '🀏'],
   p: ['🀙', '🀚', '🀛', '🀜', '🀝', '🀞', '🀟', '🀠', '🀡'],
   s: ['🀐', '🀑', '🀒', '🀓', '🀔', '🀕', '🀖', '🀗', '🀘'],
@@ -29,9 +29,9 @@ export default {
   },
   methods: {
     showCards () {
-      const tails = this.splitTiles(this.handCards);
-      this.handCardsImg = this.showHandCards(tails);
-      const arr = this.transArr(tails);
+      const tehai = this.splitTiles(this.handCards);
+      this.handCardsImg = this.showHandCards(tehai);
+      const arr = this.transArr(tehai);
       console.log(arr);
       this.Syanten = this.calculateSyanten(arr);
       this.improve(arr);
@@ -58,24 +58,12 @@ export default {
       console.log(result);
       return result;
     },
-    showHandCards (tails) {
+    showHandCards (tehai) {
       this.handCardsImg = '';
-      this.handCardsImg += tails.m.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tiles.m[b - 1], '');
-      this.handCardsImg += tails.p.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tiles.p[b - 1], '');
-      this.handCardsImg += tails.s.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tiles.s[b - 1], '');
-      this.handCardsImg += tails.z.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tiles.z[b - 1], '');
-      /* for (i = 0; i < tails.m.length; i++) {
-        this.handCardsImg += tiles.m[newTailsM.sort()[i] - 1];
-      }
-      for (i = 0; i < tails.p.length; i++) {
-        this.handCardsImg += tiles.p[newTailsP.sort()[i] - 1];
-      }
-      for (i = 0; i < tails.s.length; i++) {
-        this.handCardsImg += tiles.s[newTailsS.sort()[i] - 1];
-      }
-      for (i = 0; i < tails.z.length; i++) {
-        this.handCardsImg += tiles.z[newTailsZ.sort()[i] - 1];
-      } */
+      this.handCardsImg += tehai.m.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tilesImage.m[b - 1], '');
+      this.handCardsImg += tehai.p.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tilesImage.p[b - 1], '');
+      this.handCardsImg += tehai.s.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tilesImage.s[b - 1], '');
+      this.handCardsImg += tehai.z.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tilesImage.z[b - 1], '');
       return this.handCardsImg;
     },
     transArr (CardString) {
