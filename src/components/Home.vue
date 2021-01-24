@@ -4,7 +4,7 @@
     <div>
       <div>
         <span>Please input your hand cards:</span>
-        <input :model='handCards' placeholder='手牌' />
+        <input v-model='handCards' placeholder='手牌' />
         <button @click='showCards'>新規</button>
       </div>
       <div id='result' v-if='inputed'>
