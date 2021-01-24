@@ -15,7 +15,19 @@
                     @search="showCards"
                   >
                     <template #enterButton>
-                      <a-button> 新規 </a-button>
+                      <a-tooltip>
+                        <template #title>
+                            - m=萬子, p=筒子, s=索子, z=字牌, 0=赤
+                            - 一般形=４面子１雀頭 / 標準形=一般形＋七対形＋国士形
+                            - ツモはその時点で使用していない牌をランダムに選択します
+                            - 有効牌をクリックすると打牌後にその牌をツモ牌として表示します
+                            - (n*3+2)枚で開始：(n*3+2)枚目をツモ牌として表示
+                            - (n*3+1)枚で開始：ツモはページのロード時に毎回変化
+                            - 和了役の判定はありません
+                            - 暗槓はできません
+                        </template>
+                        <a-button type="link" ghost>新規</a-button>
+                      </a-tooltip>
                     </template>
                   </a-input-search>
                 </a-form-item>
@@ -27,7 +39,7 @@
           <a-row type="flex" justify="center">
             <a-col :span="12">
               <a-table
-                v-if="inputed"
+                v-show="inputed"
                 :columns="columns"
                 :data-source="newSchemeImg"
                 bordered
@@ -39,7 +51,11 @@
                   <a>{{ text }}</a>
                 </template>
                 <!-- eslint-disable-next-line vue/no-unused-vars-->
-                <template #title="currentPageData"> 进张 </template>
+                <template #title="currentPageData">
+                  手牌：{{ handCardsImg }}({{
+                    Syanten === 0 ? "聴牌" : `${Syanten}向聴`
+                  }})
+                </template>
               </a-table>
             </a-col>
           </a-row>
@@ -75,7 +91,7 @@ export default {
     return {
       handCards: '',
       handCardsImg: '',
-      Syanten: '',
+      Syanten: 0,
       newSchemeImg: [],
       inputed: false,
       columns: [
