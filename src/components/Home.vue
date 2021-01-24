@@ -6,6 +6,9 @@
     <button @click="showCards">新規</button>
     <p>手牌: {{ handCardsImg }}</p>
     <p>当前向听数:{{ Syanten }}</p>
+    <div>
+      <p>进章:{{ newSchemeImg }}</p>
+    </div>
   </div>
 </template>
 
@@ -24,7 +27,8 @@ export default {
     return {
       handCards: '',
       handCardsImg: '',
-      Syanten: ''
+      Syanten: '',
+      newSchemeImg: ''
     };
   },
   methods: {
@@ -35,6 +39,13 @@ export default {
       console.log(arr);
       this.Syanten = this.calculateSyanten(arr);
       console.log(this.improve(arr));
+      console.log();
+      console.log(this.discard(this.findCard(arr)));
+      const scheme = this.improve(arr);
+      // const oneDimensionArr = this.findCard(arr);
+      // console.log(oneDimensionArr);
+      const oneDimensionArrImg = this.discard(this.findCard(arr));
+      this.newSchemeImg = this.Scheme(scheme, oneDimensionArrImg);
     },
     splitTiles (handCard) {
       const result = {
@@ -65,6 +76,14 @@ export default {
       this.handCardsImg += tehai.s.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tilesImage.s[b - 1], '');
       this.handCardsImg += tehai.z.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tilesImage.z[b - 1], '');
       return this.handCardsImg;
+    },
+    showSchemeCards (tehai) {
+      let newScheme = '';
+      newScheme += tehai.m.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tilesImage.m[b - 1], '');
+      newScheme += tehai.p.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tilesImage.p[b - 1], '');
+      newScheme += tehai.s.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tilesImage.s[b - 1], '');
+      newScheme += tehai.z.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tilesImage.z[b - 1], '');
+      return newScheme;
     },
     transArr (CardString) {
       // 将m=['0','5']转变为[1,0,0,0,0,1,0,0,0]
@@ -288,6 +307,65 @@ export default {
       }
       arr[i][j]++;
       return res;
+    },
+    findCard (arr) { // 将mpsz的二维数组转换成{i:,j:}
+      const oneDimensionArr = [];
+      for (let n = 0; n < 4; n++) {
+        for (let m = 0; m < arr[n].length; m++) {
+          if (arr[n][m] > 0) {
+            const currCard = { i: n, j: m };// 可能一种牌有多张。此处算一次，即14张牌可能只有10种scheme
+            oneDimensionArr.push(currCard);
+          }
+        }
+      }
+      return oneDimensionArr;
+    },
+    discard (oneDimensionArr) {
+      const oneDimensionArrImg = [];
+      for (let n = 0; n < oneDimensionArr.length; n++) {
+        if (oneDimensionArr[n].i === 0) {
+          const img = tilesImage.m[oneDimensionArr[n].j];
+          oneDimensionArrImg.push(img);
+        }
+        if (oneDimensionArr[n].i === 1) {
+          const img = tilesImage.p[oneDimensionArr[n].j];
+          oneDimensionArrImg.push(img);
+        }
+        if (oneDimensionArr[n].i === 2) {
+          const img = tilesImage.s[oneDimensionArr[n].j];
+          oneDimensionArrImg.push(img);
+        }
+        if (oneDimensionArr[n].i === 3) {
+          const img = tilesImage.z[oneDimensionArr[n].j];
+          oneDimensionArrImg.push(img);
+        }
+      }
+      return oneDimensionArrImg;
+    },
+    Scheme (scheme, oneDimensionArrImg) {
+      const newSchemeImg = [];
+      for (let n = 0; n < scheme.length; n++) {
+        if (scheme[n].length !== 0) {
+          const curr = { i: oneDimensionArrImg[n], j: this.showSchemeCards(this.newSchemeShow(scheme[n])) };
+          newSchemeImg.push(curr);
+        }
+      }
+      return newSchemeImg;
+    },
+    newSchemeShow (scheme) { // i，j是当前arr将要被替换的元素， scheme是对应打掉i，j牌后的可能进章
+      const ret = {
+        p: [],
+        m: [],
+        s: [],
+        z: []
+      };
+      for (let n = 0; n < scheme.length; n++) {
+        if (scheme[n].i === 0) ret.m.push(String(scheme[n].j));
+        if (scheme[n].i === 1) ret.p.push(String(scheme[n].j));
+        if (scheme[n].i === 2) ret.s.push(String(scheme[n].j));
+        if (scheme[n].i === 3) ret.z.push(String(scheme[n].j));
+      }
+      return ret;
     }
   }
 };
