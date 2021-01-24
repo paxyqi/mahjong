@@ -34,7 +34,7 @@ export default {
       const arr = this.transArr(tails);
       console.log(arr);
       this.Syanten = this.calculateSyanten(arr);
-      this.improve(arr);
+      console.log(this.improve(arr));
     },
     splitTiles (handCard) {
       const result = {
@@ -64,18 +64,6 @@ export default {
       this.handCardsImg += tails.p.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tiles.p[b - 1], '');
       this.handCardsImg += tails.s.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tiles.s[b - 1], '');
       this.handCardsImg += tails.z.map((num) => num === '0' ? '5' : num).sort().reduce((a, b) => a + tiles.z[b - 1], '');
-      /* for (i = 0; i < tails.m.length; i++) {
-        this.handCardsImg += tiles.m[newTailsM.sort()[i] - 1];
-      }
-      for (i = 0; i < tails.p.length; i++) {
-        this.handCardsImg += tiles.p[newTailsP.sort()[i] - 1];
-      }
-      for (i = 0; i < tails.s.length; i++) {
-        this.handCardsImg += tiles.s[newTailsS.sort()[i] - 1];
-      }
-      for (i = 0; i < tails.z.length; i++) {
-        this.handCardsImg += tiles.z[newTailsZ.sort()[i] - 1];
-      } */
       return this.handCardsImg;
     },
     transArr (CardString) {
@@ -272,13 +260,15 @@ export default {
     },
     // 从14张牌中任选一张，再摸如一张能够改良向听的牌。当前牌面为arr，因此只需对arr进行操作后，再次将新arr进行计算，若改良成功则保留
     improve (arr) {
+      const ret = [];
       for (let i = 0; i < 4; i++) {
         for (let j = 0; j < arr[i].length; j++) {
           if (arr[i][j] > 0) {
-            // const change = this.exchange(arr, i, j);
+            ret.push(this.exchange(arr, i, j));
           }
         }
       }
+      return ret;
     },
     // 打掉arr[i][j]的牌，用其他牌替换---共有33种替换的可能？剪枝？挨个试吧？
     exchange (arr, i, j) {
@@ -296,6 +286,7 @@ export default {
           arr[p][q]--;
         }
       }
+      arr[i][j]++;
       return res;
     }
   }
