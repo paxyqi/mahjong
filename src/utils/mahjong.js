@@ -9,9 +9,9 @@ export function splitTiles (handCard) {
   while (rest.length > 0) {
     const colored = rest.match(/[0-9]*[spzm]/);
     const matchStr = colored[0];
-    result[matchStr[matchStr.length - 1]] = matchStr
+    result[matchStr[matchStr.length - 1]] = result[matchStr[matchStr.length - 1]].concat(matchStr
       .substr(0, matchStr.length - 1)
-      .split('');
+      .split(''));
     rest =
         rest.substr(0, colored.index) +
         rest.substr(colored.index + matchStr.length);
