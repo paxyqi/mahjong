@@ -1,23 +1,52 @@
+<!--eslint-disable vue/no-v-model-argument -->
 <template>
-  <div>
-    <h1>{{ msg }}</h1>
-    <div>
-      <div>
-        <span>Please input your hand cards:</span>
-        <input v-model='handCards' placeholder='手牌' />
-        <button @click='showCards'>新規</button>
-      </div>
-      <div id='result' v-if='inputed'>
-        <p class='left'>手牌: {{ handCardsImg }}  当前向听数:{{ Syanten }}</p>
-        <div>
-          <p class="left">进章:</p>
-          <div v-for='item in newSchemeImg' :key='item.i'>
-            <p class="left">打{{item.i}} 摸{{item.j}}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <a-row type="flex" justify="center">
+    <a-col>
+      <a-space direction="vertical">
+        <a-col :span="24">
+          <a-row type="flex" justify="center">
+            <a-col :span="12">
+              <a-form>
+                <a-form-item label="Please input your hand cards:">
+                  <a-input-search
+                    v-model:value="handCards"
+                    placeholder="手牌"
+                    size="large"
+                    @search="showCards"
+                  >
+                    <template #enterButton>
+                      <a-button> 新規 </a-button>
+                    </template>
+                  </a-input-search>
+                </a-form-item>
+              </a-form>
+            </a-col>
+          </a-row>
+        </a-col>
+        <a-col :span="24">
+          <a-row type="flex" justify="center">
+            <a-col :span="12">
+              <a-table
+                v-if="inputed"
+                :columns="columns"
+                :data-source="newSchemeImg"
+                bordered
+                style="width: 100%"
+                :pagination="{ pageSize: 50 }"
+                :scroll="{ y: 240 }"
+              >
+                <template #name="{ text }">
+                  <a>{{ text }}</a>
+                </template>
+                <!-- eslint-disable-next-line vue/no-unused-vars-->
+                <template #title="currentPageData"> 进张 </template>
+              </a-table>
+            </a-col>
+          </a-row>
+        </a-col>
+      </a-space>
+    </a-col>
+  </a-row>
 </template>
 <style scoped>
 .left {
@@ -38,23 +67,29 @@ import {
   improve,
   discard,
   findCard,
-  Scheme
-} from '../utils/mahjong';
+  Scheme,
+} from "../utils/mahjong";
+import { message } from "ant-design-vue";
 export default {
-  props: {
-    msg: String
-  },
-  data () {
+  data() {
     return {
-      handCards: '',
-      handCardsImg: '',
-      Syanten: '',
-      newSchemeImg: '',
-      inputed: false
+      handCards: "",
+      handCardsImg: "",
+      Syanten: "",
+      newSchemeImg: [],
+      inputed: false,
+      columns: [
+        { title: "打", dataIndex: "i" },
+        { title: "摸", dataIndex: "j" },
+      ],
     };
   },
   methods: {
-    showCards () {
+    showCards() {
+      if (this.handCards.length <= 0) {
+        message.error("手牌不能为空");
+        return;
+      }
       const tehai = splitTiles(this.handCards);
       this.handCardsImg = showHandCards(tehai);
       const arr = transTiles2Arr(tehai);
@@ -67,7 +102,7 @@ export default {
       const oneDimensionArrImg = discard(findCard(arr));
       this.newSchemeImg = Scheme(scheme, oneDimensionArrImg);
       this.inputed = true;
-    }
-  }
+    },
+  },
 };
 </script>
