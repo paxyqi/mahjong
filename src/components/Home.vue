@@ -67,27 +67,27 @@ import {
   improve,
   discard,
   findCard,
-  Scheme,
-} from "../utils/mahjong";
-import { message } from "ant-design-vue";
+  Scheme
+} from '../utils/mahjong';
+import { message } from 'ant-design-vue';
 export default {
-  data() {
+  data () {
     return {
-      handCards: "",
-      handCardsImg: "",
-      Syanten: "",
+      handCards: '',
+      handCardsImg: '',
+      Syanten: '',
       newSchemeImg: [],
       inputed: false,
       columns: [
-        { title: "打", dataIndex: "i" },
-        { title: "摸", dataIndex: "j" },
-      ],
+        { title: '打', dataIndex: 'i' },
+        { title: '摸', dataIndex: 'j' }
+      ]
     };
   },
   methods: {
-    showCards() {
+    showCards () {
       if (this.handCards.length <= 0) {
-        message.error("手牌不能为空");
+        message.error('手牌不能为空');
         return;
       }
       const tehai = splitTiles(this.handCards);
@@ -102,7 +102,7 @@ export default {
       const oneDimensionArrImg = discard(findCard(arr));
       this.newSchemeImg = Scheme(scheme, oneDimensionArrImg);
       this.inputed = true;
-    },
-  },
+    }
+  }
 };
 </script>
