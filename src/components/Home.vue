@@ -2,16 +2,18 @@
   <div>
     <h1>{{ msg }}</h1>
     <div>
-      <form>
+      <div>
         <span>Please input your hand cards:</span>
-        <input v-model="handCards" placeholder="手牌" />
-        <button @click="showCards">新規</button>
-      </form>
-      <div id="result" v-if="inputed">
-        <p class="left">手牌: {{ handCardsImg }}</p>
-        <p class="left">当前向听数:{{ Syanten }}</p>
+        <input :model='handCards' placeholder='手牌' />
+        <button @click='showCards'>新規</button>
+      </div>
+      <div id='result' v-if='inputed'>
+        <p class='left'>手牌: {{ handCardsImg }}  当前向听数:{{ Syanten }}</p>
         <div>
-          <p>进章:{{ newSchemeImg }}</p>
+          <p class="left">进章:</p>
+          <div v-for='item in newSchemeImg' :key='item.i'>
+            <p class="left">打{{item.i}} 摸{{item.j}}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -20,6 +22,11 @@
 <style scoped>
 .left {
   text-align: left;
+}
+
+#result {
+  width: 60%;
+  margin: auto;
 }
 </style>
 <script>
