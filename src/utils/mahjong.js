@@ -74,7 +74,7 @@ export function transTiles2Arr (CardString) {
   return arr;
 }
 
-export function calculateSyanten (t) {
+export function syanten (t) {
   // 24m1556p2459s4572z syanten = 8-2*mentsu-tatsu
   let res = 9;
   let mentsu = 0;
@@ -120,7 +120,7 @@ export function calculateSyanten (t) {
     for (let i = 0; i < 9; i++) {
       if (arr1[i] === 0 || arr1[i] === undefined) {
         continue;
-      } else if (arr[i] === 2) {
+      } else if (arr1[i] === 2) {
         arr1[i] -= 2;
         tmpTatsu++; // 两个一万 搭子
         continue;
@@ -242,6 +242,34 @@ export function calculateSyanten (t) {
   calc();
 
   return res;
+};
+export function syanten7 (haiArr) { // 七对子
+  const cnt = haiArr[0].reduce((a, b) => a + b) + haiArr[1].reduce((a, b) => a + b) + haiArr[2].reduce((a, b) => a + b) + haiArr[3].reduce((a, b) => a + b);
+  if (cnt < 13 || cnt > 14) { return -2; } // 相公
+  const arr = [...haiArr[0], ...haiArr[1], ...haiArr[2], ...haiArr[3]];
+  let s = 0; let t = 0;
+  for (let i = 0; i < 34; i++) {
+    if (arr[i] >= 2) s++;
+    if (arr[i] === 1) t++;
+  }
+  if (s + t >= 7) { return 6 - s; } else { return 6 - s + (7 - s - t); }
+};
+export function syanten13 (haiArr) { // 国士无双
+  const cnt = haiArr[0].reduce((a, b) => a + b) + haiArr[1].reduce((a, b) => a + b) + haiArr[2].reduce((a, b) => a + b) + haiArr[3].reduce((a, b) => a + b);
+  if (cnt < 13 || cnt > 14) { return -2; }
+  const arr = [haiArr[0][0], haiArr[0][8], haiArr[1][0], haiArr[1][8], haiArr[2][0], haiArr[2][8], ...haiArr[3]];
+  let s = 0; let t = 0;
+  for (let i = 0; i < 13; i++) {
+    if (arr[i]) s++;
+    if (arr[i] > 1) t = 1;
+  }
+  return 13 - s - t;
+};
+
+export function syantenAll (haiArr) {
+  const s7 = syanten7(haiArr);
+  const s13 = syanten13(haiArr);
+  if (s7 === -2 || s13 === -2) { return syanten(haiArr); } else { return Math.min(syanten(haiArr), s7, s13); }
 }
 
 // 从14张牌中任选一张，再摸如一张能够改良向听的牌。当前牌面为arr，因此只需对arr进行操作后，再次将新arr进行计算，若改良成功则保留
@@ -258,14 +286,14 @@ export function improve (arr) {
 };
 // 打掉arr[i][j]的牌，用其他牌替换---共有33种替换的可能？剪枝？挨个试吧？
 function exchange (arr, i, j) {
-  const preSyanten = calculateSyanten(arr);
+  const preSyanten = syantenAll(arr);
   arr[i][j]--;
   const res = [];
   for (let p = 0; p < 4; p++) {
     for (let q = 0; q < arr[p].length; q++) {
       arr[p][q]++;
-      const currSyanten = calculateSyanten(arr);
-      if (currSyanten < preSyanten) {
+      const currSyanten = syantenAll(arr);
+      if ((p !== i && q !== j) && (currSyanten < preSyanten)) { // 不能是原来那个
         const couple = { i: p, j: q }; // 有改良即可
         res.push(couple);
       }
@@ -312,7 +340,7 @@ export function findCard (arr) {
   }
   return oneDimensionArr;
 };
-export function Scheme (scheme, oneDimensionArrImg) {
+export function Scheme (scheme, oneDimensionArrImg) { // 摸切的牌
   const newSchemeImg = [];
   for (let n = 0; n < scheme.length; n++) {
     if (scheme[n].length !== 0) {
@@ -334,10 +362,10 @@ function newSchemeShow (scheme) {
     z: []
   };
   for (let n = 0; n < scheme.length; n++) {
-    if (scheme[n].i === 0) ret.m.push(String(scheme[n].j));
-    if (scheme[n].i === 1) ret.p.push(String(scheme[n].j));
-    if (scheme[n].i === 2) ret.s.push(String(scheme[n].j));
-    if (scheme[n].i === 3) ret.z.push(String(scheme[n].j));
+    if (scheme[n].i === 0) ret.m.push(String(++scheme[n].j));
+    if (scheme[n].i === 1) ret.p.push(String(++scheme[n].j));
+    if (scheme[n].i === 2) ret.s.push(String(++scheme[n].j));
+    if (scheme[n].i === 3) ret.z.push(String(++scheme[n].j));
   }
   return ret;
 }

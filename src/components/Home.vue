@@ -34,7 +34,7 @@ import {
   splitTiles,
   showHandCards,
   transTiles2Arr,
-  calculateSyanten,
+  syantenAll,
   improve,
   discard,
   findCard,
@@ -58,14 +58,14 @@ export default {
       const tehai = splitTiles(this.handCards);
       this.handCardsImg = showHandCards(tehai);
       const arr = transTiles2Arr(tehai);
-      this.Syanten = calculateSyanten(arr);
+      this.Syanten = syantenAll(arr);
       improve(arr);
       discard(findCard(arr));
       const scheme = improve(arr);
       // const oneDimensionArr = findCard(arr);
       // console.log(oneDimensionArr);
-      const oneDimensionArrImg = discard(findCard(arr));
-      this.newSchemeImg = Scheme(scheme, oneDimensionArrImg);
+      const oneDimensionArrImg = discard(findCard(arr));// 获得可以打掉的牌
+      this.newSchemeImg = Scheme(scheme, oneDimensionArrImg);// 展示模切
       this.inputed = true;
     }
   }
