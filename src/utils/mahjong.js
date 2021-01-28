@@ -1,4 +1,4 @@
-function splitTiles (handCard) {
+export function splitTiles (handCard) {
   const result = {
     p: [],
     m: [],
@@ -17,6 +17,14 @@ function splitTiles (handCard) {
       rest.substr(colored.index + matchStr.length);
   }
   return result;
+}
+
+export function joinTiles (tiles) {
+  let handCard = '';
+  for (const color in tiles) {
+    handCard += tiles[color].sort().join('') + color;
+  }
+  return handCard;
 }
 
 const tilesImage = {

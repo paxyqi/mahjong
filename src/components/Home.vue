@@ -79,7 +79,7 @@
 }
 </style>
 <script>
-import { Calc, hai2Img } from '../utils/mahjong';
+import { Calc, hai2Img, splitTiles, joinTiles } from '../utils/mahjong';
 import { message } from 'ant-design-vue';
 export default {
   data () {
@@ -104,14 +104,22 @@ export default {
       kariyou.forEach((value, key) => {
         imgs.push({
           da: hai2Img(key)[0],
-          mo: value.map(hai2Img).map((arr) => arr[0])
+          daRaw: key,
+          mo: value.map(hai2Img).map((arr) => arr[0]),
+          moRaw: value
         });
       });
       this.calcRes = imgs;
       this.inputed = true;
     },
     discard (record, index) {
-      console.log(`摸${record.mo[index]}打${record.da},index is ${index}`);
+      const da = record.daRaw;
+      const mo = record.moRaw[index];
+      const modoTehai = splitTiles(this.handCards);
+      modoTehai[da[1]] = modoTehai[da[1]].filter(item => item !== da[0]);
+      modoTehai[mo[1]].push(mo[0]);
+      this.handCards=joinTiles(modoTehai);
+      this.showCards();
     }
   },
   computed: {
