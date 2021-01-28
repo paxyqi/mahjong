@@ -79,7 +79,7 @@
 }
 </style>
 <script>
-import { Calc, hai2Img, splitTiles, joinTiles } from '../utils/mahjong';
+import { Calc, hai2Img, splitTiles, joinTiles, checkInput } from '../utils/mahjong';
 import { message } from 'ant-design-vue';
 export default {
   data () {
@@ -92,8 +92,8 @@ export default {
   },
   methods: {
     showCards () {
-      if (this.handCards.length <= 0) {
-        message.error('手牌不能为空');
+      if (this.handCards.length <= 0 || !checkInput(this.handCards)) {
+        message.error('無効入力');
         return;
       }
       // ==========================
@@ -118,7 +118,7 @@ export default {
       const modoTehai = splitTiles(this.handCards);
       modoTehai[da[1]] = modoTehai[da[1]].filter(item => item !== da[0]);
       modoTehai[mo[1]].push(mo[0]);
-      this.handCards=joinTiles(modoTehai);
+      this.handCards = joinTiles(modoTehai);
       this.showCards();
     }
   },

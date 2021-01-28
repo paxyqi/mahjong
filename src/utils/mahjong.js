@@ -362,3 +362,14 @@ export function hai2Img (hai) {
     return [];
   }
 }
+
+export function checkInput (tehai) {
+  try {
+    const splited = splitTiles(tehai.replace(/0/, '5'));
+    const sum = splited.m.length + splited.p.length + splited.s.length + splited.z.length;
+    if (sum < 13 || sum > 14) { return false; }
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
