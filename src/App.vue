@@ -4,8 +4,8 @@
       <a-layout-header style="padding: 0" class="header">
         <a-page-header
           style="background-color: #f5f5f5; width: 100%"
-          title="Mahjong helper"
-          sub-title="Welcome to Pixy Mahjong website"
+          title="麻雀牌理"
+          sub-title="ようこそPixyちゃんの牌理ウェブサイト!"
         />
       </a-layout-header>
       <a-layout-content class="content">
@@ -13,12 +13,17 @@
           <a-col :span="24">
             <a-row type="flex" justify="center">
               <a-col :span="24">
-                <div class="imgBox">
-                <img
-                  alt="Mahjong pic"
-                  src="./assets/majhong.png"
-                  style="transform: scale(0.7);"
-                /></div>
+                <a href="https://jq.qq.com/?_wv=1027&k=YpFouQSn">
+                  <div class="imgBox">
+                    <img
+                      alt="Mahjong pic"
+                      width="300"
+                      height="300"
+                      src="./assets/mahjong.png"
+                      style="transform: scale(0.7)"
+                    />
+                  </div>
+                </a>
               </a-col>
             </a-row>
             <a-row type="flex" justify="center">
@@ -30,7 +35,7 @@
         </a-row>
       </a-layout-content>
       <a-layout-footer style="text-align: center" class="footer">
-        Pixy ©2021
+        <a href="https://github.com/paxyqi" style="text-decoration: none;color:black"><strong>Pixy</strong></a> ©2021
       </a-layout-footer>
     </a-layout>
   </div>
@@ -60,10 +65,10 @@ html {
 .foot {
   flex: 0 0 auto;
 }
-.imgBox{
+.imgBox {
   display: flex;
-  align-items:center;
-  justify-content:center;
+  align-items: center;
+  justify-content: center;
 }
 </style>
 <script>
