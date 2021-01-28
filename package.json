@@ -12,6 +12,7 @@
     "vue": "^3.0.5"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue": "^1.1.2",
     "@vue/compiler-sfc": "^3.0.5",
     "eslint": "^7.18.0",
     "eslint-config-standard": "^16.0.2",
@@ -19,6 +20,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-vue": "^7.5.0",
-    "vite": "^1.0.0-rc.13"
+    "vite": "^2.0.0-beta.52",
+    "vite-plugin-style-import": "^0.4.6"
   }
 }

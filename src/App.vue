@@ -9,12 +9,25 @@
         />
       </a-layout-header>
       <a-layout-content class="content">
-        <img
-          alt="Vue logo"
-          src="./assets/majhong.png"
-          style="transform: scale(0.7)"
-        />
-        <Home />
+        <a-row>
+          <a-col :span="24">
+            <a-row type="flex" justify="center">
+              <a-col :span="24">
+                <div class="imgBox">
+                <img
+                  alt="Mahjong pic"
+                  src="./assets/majhong.png"
+                  style="transform: scale(0.7);"
+                /></div>
+              </a-col>
+            </a-row>
+            <a-row type="flex" justify="center">
+              <a-col :span="24">
+                <Home />
+              </a-col>
+            </a-row>
+          </a-col>
+        </a-row>
       </a-layout-content>
       <a-layout-footer style="text-align: center" class="footer">
         Pixy ©2021
@@ -46,6 +59,11 @@ html {
 }
 .foot {
   flex: 0 0 auto;
+}
+.imgBox{
+  display: flex;
+  align-items:center;
+  justify-content:center;
 }
 </style>
 <script>

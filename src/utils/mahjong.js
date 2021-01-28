@@ -1,4 +1,4 @@
-export function splitTiles (handCard) {
+function splitTiles (handCard) {
   const result = {
     p: [],
     m: [],
@@ -19,35 +19,14 @@ export function splitTiles (handCard) {
   return result;
 }
 
-export const tilesImage = {
+const tilesImage = {
   m: ['🀇', '🀈', '🀉', '🀊', '🀋', '🀌', '🀍', '🀎', '🀏'],
   p: ['🀙', '🀚', '🀛', '🀜', '🀝', '🀞', '🀟', '🀠', '🀡'],
   s: ['🀐', '🀑', '🀒', '🀓', '🀔', '🀕', '🀖', '🀗', '🀘'],
   z: ['🀀', '🀁', '🀂', '🀃', '🀆', '🀅', '🀄', '🀫', '🀪']
 };
 
-export function showHandCards (tehai) {
-  let handCardsImg = '';
-  handCardsImg += tehai.m
-    .map((num) => (num === '0' ? '5' : num))
-    .sort()
-    .reduce((a, b) => a + tilesImage.m[b - 1], '');
-  handCardsImg += tehai.p
-    .map((num) => (num === '0' ? '5' : num))
-    .sort()
-    .reduce((a, b) => a + tilesImage.p[b - 1], '');
-  handCardsImg += tehai.s
-    .map((num) => (num === '0' ? '5' : num))
-    .sort()
-    .reduce((a, b) => a + tilesImage.s[b - 1], '');
-  handCardsImg += tehai.z
-    .map((num) => (num === '0' ? '5' : num))
-    .sort()
-    .reduce((a, b) => a + tilesImage.z[b - 1], '');
-  return handCardsImg;
-}
-
-export function transTiles2Arr (CardString) {
+function transTiles2Arr (CardString) {
   // 将m=['0','5']转变为[1,0,0,0,0,1,0,0,0]
   const arrM = new Array(9).fill(0);
   const arrP = new Array(9).fill(0);
@@ -74,7 +53,7 @@ export function transTiles2Arr (CardString) {
   return arr;
 }
 
-export function syanten (t) {
+function syanten (t) {
   // 24m1556p2459s4572z syanten = 8-2*mentsu-tatsu
   let res = 9;
   let mentsu = 0;
@@ -243,7 +222,7 @@ export function syanten (t) {
 
   return res;
 };
-export function syanten7 (haiArr) { // 七对子
+function syanten7 (haiArr) { // 七对子
   const cnt = haiArr[0].reduce((a, b) => a + b) + haiArr[1].reduce((a, b) => a + b) + haiArr[2].reduce((a, b) => a + b) + haiArr[3].reduce((a, b) => a + b);
   if (cnt < 13 || cnt > 14) { return -2; } // 相公
   const arr = [...haiArr[0], ...haiArr[1], ...haiArr[2], ...haiArr[3]];
@@ -254,7 +233,7 @@ export function syanten7 (haiArr) { // 七对子
   }
   if (s + t >= 7) { return 6 - s; } else { return 6 - s + (7 - s - t); }
 };
-export function syanten13 (haiArr) { // 国士无双
+function syanten13 (haiArr) { // 国士无双
   const cnt = haiArr[0].reduce((a, b) => a + b) + haiArr[1].reduce((a, b) => a + b) + haiArr[2].reduce((a, b) => a + b) + haiArr[3].reduce((a, b) => a + b);
   if (cnt < 13 || cnt > 14) { return -2; }
   const arr = [haiArr[0][0], haiArr[0][8], haiArr[1][0], haiArr[1][8], haiArr[2][0], haiArr[2][8], ...haiArr[3]];
@@ -266,14 +245,14 @@ export function syanten13 (haiArr) { // 国士无双
   return 13 - s - t;
 };
 
-export function syantenAll (haiArr) {
+function syantenAll (haiArr) {
   const s7 = syanten7(haiArr);
   const s13 = syanten13(haiArr);
   if (s7 === -2 || s13 === -2) { return syanten(haiArr); } else { return Math.min(syanten(haiArr), s7, s13); }
 }
 
 // 从14张牌中任选一张，再摸如一张能够改良向听的牌。当前牌面为arr，因此只需对arr进行操作后，再次将新arr进行计算，若改良成功则保留 获得{i:,j:},每一张待切牌对应一个数组
-export function improve (arr) {
+function improve (arr) {
   const ret = [];
   for (let i = 0; i < 4; i++) {
     for (let j = 0; j < arr[i].length; j++) {
@@ -304,30 +283,7 @@ function exchange (arr, i, j) {
   return res;
 };
 
-export function discard (oneDimensionArr) { // 将待切牌转换为图像
-  const oneDimensionArrImg = [];
-  for (let n = 0; n < oneDimensionArr.length; n++) {
-    if (oneDimensionArr[n].i === 0) {
-      const img = tilesImage.m[oneDimensionArr[n].j];
-      oneDimensionArrImg.push(img);
-    }
-    if (oneDimensionArr[n].i === 1) {
-      const img = tilesImage.p[oneDimensionArr[n].j];
-      oneDimensionArrImg.push(img);
-    }
-    if (oneDimensionArr[n].i === 2) {
-      const img = tilesImage.s[oneDimensionArr[n].j];
-      oneDimensionArrImg.push(img);
-    }
-    if (oneDimensionArr[n].i === 3) {
-      const img = tilesImage.z[oneDimensionArr[n].j];
-      oneDimensionArrImg.push(img);
-    }
-  }
-  return oneDimensionArrImg;
-}
-
-export function findCard (arr) { // 将mpsz的二维数组转换成{i:,j:}
+function findCard (arr) { // 将mpsz的二维数组转换成{i:,j:}
   const oneDimensionArr = [];
   for (let n = 0; n < 4; n++) {
     for (let m = 0; m < arr[n].length; m++) {
@@ -339,35 +295,8 @@ export function findCard (arr) { // 将mpsz的二维数组转换成{i:,j:}
   }
   return oneDimensionArr;
 };
-export function Scheme (scheme, oneDimensionArrImg) { // 摸切的牌
-  const newSchemeImg = [];
-  for (let n = 0; n < scheme.length; n++) {
-    if (scheme[n].length !== 0) {
-      const curr = {
-        i: oneDimensionArrImg[n],
-        j: showHandCards(newSchemeShow(scheme[n]))
-      };
-      newSchemeImg.push(curr);
-    }
-  }
-  return newSchemeImg;
-};
-function newSchemeShow (scheme) { // i，j是当前arr将要被替换的元素， scheme是对应打掉i，j牌后的可能进章
-  const ret = {
-    p: [],
-    m: [],
-    s: [],
-    z: []
-  };
-  for (let n = 0; n < scheme.length; n++) {
-    if (scheme[n].i === 0) ret.m.push(String(++scheme[n].j));
-    if (scheme[n].i === 1) ret.p.push(String(++scheme[n].j));
-    if (scheme[n].i === 2) ret.s.push(String(++scheme[n].j));
-    if (scheme[n].i === 3) ret.z.push(String(++scheme[n].j));
-  }
-  return ret;
-};
-export function API (rawData) { // 输入为input框获得的原始数据，
+
+export function Calc (rawData) { // 输入为input框获得的原始数据，
   const arr = transTiles2Arr(splitTiles(rawData)); // 获取数据转换得到的arr
   const syantenRes = syantenAll(arr); // 计算当前手牌向听数
   const improveRes = improve(arr); // 获取改良[{i:,j:}]
@@ -411,4 +340,17 @@ function mapKariyou (cards, improveRes) {
     }
   }
   return res;
+}
+
+export function hai2Img (hai) {
+  try {
+    const splited = splitTiles(hai.replace(/0/, '5'));
+    const result = [];
+    for (const key in splited) {
+      result.push(...(splited[key].map(index => tilesImage[key][index - 1])));
+    }
+    return result;
+  } catch (_) {
+    return [];
+  }
 }

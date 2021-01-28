@@ -1,7 +1,27 @@
 import { createApp } from 'vue';
-import Antd from 'ant-design-vue';
-import 'ant-design-vue/dist/antd.css';
+import {
+  Layout,
+  Table,
+  Form,
+  Input,
+  Button,
+  Row,
+  Col,
+  PageHeader,
+  Tooltip,
+  Space
+} from 'ant-design-vue';
 import App from './App.vue';
-import './index.css';
 
-createApp(App).use(Antd).mount('#app');
+createApp(App)
+  .use(Layout)
+  .use(Table)
+  .use(Form)
+  .use(Input)
+  .use(Button)
+  .use(Row)
+  .use(Col)
+  .use(PageHeader)
+  .use(Tooltip)
+  .use(Space)
+  .mount('#app');
