@@ -13,8 +13,8 @@ export function splitTiles (handCard) {
       .substr(0, matchStr.length - 1)
       .split(''));
     rest =
-        rest.substr(0, colored.index) +
-        rest.substr(colored.index + matchStr.length);
+      rest.substr(0, colored.index) +
+      rest.substr(colored.index + matchStr.length);
   }
   return result;
 }
@@ -272,7 +272,7 @@ export function syantenAll (haiArr) {
   if (s7 === -2 || s13 === -2) { return syanten(haiArr); } else { return Math.min(syanten(haiArr), s7, s13); }
 }
 
-// 从14张牌中任选一张，再摸如一张能够改良向听的牌。当前牌面为arr，因此只需对arr进行操作后，再次将新arr进行计算，若改良成功则保留
+// 从14张牌中任选一张，再摸如一张能够改良向听的牌。当前牌面为arr，因此只需对arr进行操作后，再次将新arr进行计算，若改良成功则保留 获得{i:,j:},每一张待切牌对应一个数组
 export function improve (arr) {
   const ret = [];
   for (let i = 0; i < 4; i++) {
@@ -304,7 +304,7 @@ function exchange (arr, i, j) {
   return res;
 };
 
-export function discard (oneDimensionArr) {
+export function discard (oneDimensionArr) { // 将待切牌转换为图像
   const oneDimensionArrImg = [];
   for (let n = 0; n < oneDimensionArr.length; n++) {
     if (oneDimensionArr[n].i === 0) {
@@ -327,8 +327,7 @@ export function discard (oneDimensionArr) {
   return oneDimensionArrImg;
 }
 
-export function findCard (arr) {
-  // 将mpsz的二维数组转换成{i:,j:}
+export function findCard (arr) { // 将mpsz的二维数组转换成{i:,j:}
   const oneDimensionArr = [];
   for (let n = 0; n < 4; n++) {
     for (let m = 0; m < arr[n].length; m++) {
@@ -353,8 +352,7 @@ export function Scheme (scheme, oneDimensionArrImg) { // 摸切的牌
   }
   return newSchemeImg;
 };
-function newSchemeShow (scheme) {
-  // i，j是当前arr将要被替换的元素， scheme是对应打掉i，j牌后的可能进章
+function newSchemeShow (scheme) { // i，j是当前arr将要被替换的元素， scheme是对应打掉i，j牌后的可能进章
   const ret = {
     p: [],
     m: [],
@@ -368,4 +366,49 @@ function newSchemeShow (scheme) {
     if (scheme[n].i === 3) ret.z.push(String(++scheme[n].j));
   }
   return ret;
+};
+export function API (rawData) { // 输入为input框获得的原始数据，
+  const arr = transTiles2Arr(splitTiles(rawData)); // 获取数据转换得到的arr
+  const syantenRes = syantenAll(arr); // 计算当前手牌向听数
+  const improveRes = improve(arr); // 获取改良[{i:,j:}]
+  const cards = findCard(arr);
+  // console.log(transIJ2Name(cards));
+  const mapKariyouRes = mapKariyou(cards, improveRes);
+  const returnStruct = { syanten: syantenRes, kariyou: mapKariyouRes };
+  return returnStruct;
+};
+function transIJ2Name (arrIJ) { // 将形如[{i:1,j:2},{i:2,j:2}]的数组转化为3p 3s
+  const res = [];// 返回一维数组如 3p，3s，1z
+  let curr = '';
+  for (let n = 0; n < arrIJ.length; n++) {
+    if (arrIJ[n].i === 0) { // 花色为m
+      curr = (++arrIJ[n].j) + 'm';
+      res.push(curr);
+    }
+    if (arrIJ[n].i === 1) { // 花色为p
+      curr = (++arrIJ[n].j) + 'p';
+      res.push(curr);
+    }
+    if (arrIJ[n].i === 2) { // 花色为s
+      curr = (++arrIJ[n].j) + 's';
+      res.push(curr);
+    }
+    if (arrIJ[n].i === 3) { // 花色为z
+      curr = (++arrIJ[n].j) + 'z';
+      res.push(curr);
+    }
+  }
+  return res;
+};
+function mapKariyou (cards, improveRes) {
+  const res = new Map();
+  const cardsName = transIJ2Name(cards);
+  let transName = [];
+  for (let n = 0; n < improveRes.length; n++) {
+    if (improveRes[n].length > 0) { // n号有改良
+      transName = transIJ2Name(improveRes[n]);
+      res.set(cardsName[n], transName);
+    }
+  }
+  return res;
 }

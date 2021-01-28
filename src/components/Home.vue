@@ -83,19 +83,21 @@ import {
   improve,
   discard,
   findCard,
-  Scheme
+  Scheme,
+  API
 } from '../utils/mahjong';
 import { message } from 'ant-design-vue';
 export default {
   data () {
     return {
       handCards: '',
+      changeCards: '',
       handCardsImg: '',
       Syanten: 0,
       newSchemeImg: [],
       inputed: false,
       columns: [
-        { title: '打', dataIndex: 'i' },
+        { title: '切', dataIndex: 'i' },
         { title: '摸', dataIndex: 'j' }
       ]
     };
@@ -106,11 +108,12 @@ export default {
         message.error('手牌不能为空');
         return;
       }
+      console.log(API(this.handCards));
       const tehai = splitTiles(this.handCards);
       this.handCardsImg = showHandCards(tehai);
       const arr = transTiles2Arr(tehai);
       this.Syanten = syantenAll(arr);
-      improve(arr);
+      // improve(arr);
       discard(findCard(arr));
       const scheme = improve(arr);
       // const oneDimensionArr = findCard(arr);
