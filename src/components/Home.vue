@@ -48,16 +48,19 @@
               >
                 <template #title>
                   <span
-                    >手牌：{{ handCardsImg.join("") }}({{
+                    >手牌：<span style="font-size:2em">{{ handCardsImg.join("") }}</span>({{
                       Syanten === 0 ? "聴牌" : `${Syanten}向聴`
                     }})</span>
                 </template>
                 <a-table-column-group title="標準形(七対国士を含む)の計算結果:">
                   <a-table-column key="da" data-index="da" title="打">
+                    <template #default="{text:da}">
+                        <span style="font-size:2em">{{da}}</span>
+                    </template>
                   </a-table-column>
                   <a-table-column key="mo" title="摸" data-index="mo">
                     <template #default="{text:mo,record}">
-                      <a><span v-for="(tile,index) in mo" :key="tile" @click="discard(record,index)">{{ tile }}</span></a>
+                      <a><span v-for="(tile,index) in mo" :key="tile" @click="discard(record,index)" style="font-size:2em">{{ tile }}</span></a>
                     </template>
                   </a-table-column>
                 </a-table-column-group>
