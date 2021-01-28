@@ -108,7 +108,10 @@ export default {
         message.error('手牌不能为空');
         return;
       }
+      // ==========================
+      // API的返回值即为map
       console.log(API(this.handCards));
+      // ==========================
       const tehai = splitTiles(this.handCards);
       this.handCardsImg = showHandCards(tehai);
       const arr = transTiles2Arr(tehai);
