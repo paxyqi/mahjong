@@ -1,3 +1,23 @@
+<style scoped>
+.left {
+  text-align: left;
+}
+
+#result {
+  width: 60%;
+  margin: auto;
+}
+
+@font-face {
+  font-family: NotoSans;
+  src: url(https://fonts.googleapis.com/css?family=Noto+Sans+SC);
+}
+
+.tiles {
+  font-size:2em;
+  font-family: NotoSans;
+}
+</style>
 <!--eslint-disable vue/no-v-model-argument -->
 <template>
   <a-row type="flex" justify="center">
@@ -48,19 +68,19 @@
               >
                 <template #title>
                   <span
-                    >手牌：<span style="font-size:2em">{{ handCardsImg.join("") }}</span>({{
+                    >手牌：<span class="tiles">{{ handCardsImg.join("") }}</span>({{
                       Syanten === 0 ? "聴牌" : `${Syanten}向聴`
                     }})</span>
                 </template>
                 <a-table-column-group title="標準形(七対国士を含む)の計算結果:">
                   <a-table-column key="da" data-index="da" title="打">
                     <template #default="{text:da}">
-                        <span style="font-size:2em">{{da}}</span>
+                        <span class="tiles">{{da}}</span>
                     </template>
                   </a-table-column>
                   <a-table-column key="mo" title="摸" data-index="mo">
                     <template #default="{text:mo,record}">
-                      <a><span v-for="(tile,index) in mo" :key="tile" @click="discard(record,index)" style="font-size:2em">{{ tile }}</span></a>
+                      <a><span v-for="(tile,index) in mo" :key="tile" @click="discard(record,index)" class="tiles">{{ tile }}</span></a>
                     </template>
                   </a-table-column>
                 </a-table-column-group>
@@ -71,16 +91,6 @@
     </a-col>
   </a-row>
 </template>
-<style scoped>
-.left {
-  text-align: left;
-}
-
-#result {
-  width: 60%;
-  margin: auto;
-}
-</style>
 <script>
 import { Calc, hai2Img, splitTiles, joinTiles, checkInput } from '../utils/mahjong';
 import { message } from 'ant-design-vue';
