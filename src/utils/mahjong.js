@@ -61,8 +61,7 @@ function transTiles2Arr (CardString) {
   return arr;
 }
 
-function syanten (t) {
-  // 24m1556p2459s4572z syanten = 8-2*mentsu-tatsu
+function syanten (t) { // 24m1556p2459s4572z syanten = 8-2*mentsu-tatsu
   let res = 9;
   let mentsu = 0;
   let tatsu = 0;

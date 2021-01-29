@@ -13,12 +13,12 @@
           <a-col :span="24">
             <a-row type="flex" justify="center">
               <a-col :span="24">
-                <a href="https://jq.qq.com/?_wv=1027&k=YpFouQSn">
+                <a href="https://github.com/paxyqi/mahjong">
                   <div class="imgBox">
                     <img
                       alt="Mahjong pic"
                       width="300"
-                      height="300"
+                      height="400"
                       src="./assets/mahjong.png"
                       style="transform: scale(0.7)"
                     />
