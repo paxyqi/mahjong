@@ -279,7 +279,7 @@ function exchange (arr, i, j) {
     for (let q = 0; q < arr[p].length; q++) {
       arr[p][q]++;
       const currSyanten = syantenAll(arr);
-      if ((p !== i && q !== j) && (currSyanten < preSyanten)) { // 不能是原来那个
+      if ((p !== i || q !== j) && (currSyanten < preSyanten)) { // 不能是原来那个
         const couple = { i: p, j: q }; // 有改良即可
         res.push(couple);
       }
