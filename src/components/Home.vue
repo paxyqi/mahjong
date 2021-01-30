@@ -101,7 +101,7 @@ import { message } from 'ant-design-vue';
 import { computed, ComputedRef, ref, Ref } from 'vue';
 type Records = {da:string, daRaw:string, mo:string[], moRaw:string[]}
 export default {
-  setup ():Record<string, Ref|ComputedRef|(()=>void)> {
+  setup ():Record<string, Ref|ComputedRef|CallableFunction> {
     const handCards = ref('');
     const Syanten = ref(0);
     const calcRes:Ref<Records[]> = ref([]);
