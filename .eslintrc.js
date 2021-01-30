@@ -8,7 +8,6 @@ module.exports = {
     'plugin:vue/base',
     'standard',
     'plugin:@typescript-eslint/recommended',
-    '@vue/standard',
     'plugin:vue/vue3-recommended'
   ],
   globals: {
