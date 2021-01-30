@@ -66,9 +66,8 @@
                 v-show="inputed"
               >
                 <template #title>
-                  <span
-                    >手牌：<span class="tiles">{{ handCardsImg.join("") }}</span>({{
-                      Syanten === 0 ? "聴牌" : `${Syanten}向聴`
+                  <span>手牌：<span class="tiles">{{ handCardsImg.join("") }}</span>({{
+                      Syanten === -1? '和了' :(Syanten === 0 ? "聴牌" : `${Syanten}向聴`)
                     }})</span>
                 </template>
                 <a-table-column-group title="標準形(七対国士を含む)の計算結果:">
@@ -77,7 +76,7 @@
                         <span class="tiles">{{da}}</span>
                     </template>
                   </a-table-column>
-                  <a-table-column key="mo" title="摸" data-index="mo">
+                  <a-table-column key="mo" :title="Syanten >0?'摸':'待ち'" data-index="mo">
                     <template #default="{text:mo,record}">
                       <a><span v-for="(tile,index) in mo" :key="tile" @click="discard(record,index)" class="tiles">{{ tile }}</span></a>
                     </template>
