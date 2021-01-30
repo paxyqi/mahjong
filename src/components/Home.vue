@@ -98,10 +98,10 @@
 <script lang="ts">
 import { Calc, checkInput, Color, hai2Img, joinTiles, splitTiles } from '../utils/mahjong';
 import { message } from 'ant-design-vue';
-import { computed, ref, Ref } from 'vue';
+import { computed, ComputedRef, ref, Ref } from 'vue';
 type Records = {da:string, daRaw:string, mo:string[], moRaw:string[]}
 export default {
-  setup ():Record<string, unknown> {
+  setup ():Record<string, Ref|ComputedRef|(()=>void)> {
     const handCards = ref('');
     const Syanten = ref(0);
     const calcRes:Ref<Records[]> = ref([]);
