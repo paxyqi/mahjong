@@ -6,6 +6,7 @@ interface IHandCard{
 }
 type Card = { i:number, j:number};
 export type Color = keyof IHandCard;
+type ResultStructure = {syanten:number, kairyou:Map<string, string[]>};
 export function splitTiles (handCard:string):IHandCard {
   const result:IHandCard = {
     p: [],
@@ -315,13 +316,13 @@ function findCard (arr:number[][]):Card[] { // 将mpsz的二维数组转换成{i
   return oneDimensionArr;
 }
 
-export function Calc (rawData:string):{syanten:number, kairyou:Map<string, string[]>} { // 输入为input框获得的原始数据，
+export function Calc (rawData:string): ResultStructure { // 输入为input框获得的原始数据，
   const arr = transTiles2Arr(splitTiles(rawData)); // 获取数据转换得到的arr
   const syantenRes = syantenAll(arr); // 计算当前手牌向听数
   const improveRes = improve(arr); // 获取改良[{i:,j:}]
   const cards = findCard(arr);
   const mapKariyouRes = mapKariyou(cards, improveRes);
-  const returnStruct = { syanten: syantenRes, kairyou: mapKariyouRes };
+  const returnStruct:ResultStructure = { syanten: syantenRes, kairyou: mapKariyouRes };
   return returnStruct;
 }
 function transIJ2Name (Cards:Card[]) { // 将形如[{i:1,j:2},{i:2,j:2}]的数组转化为3p 3s
