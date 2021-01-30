@@ -78,12 +78,12 @@
                   :title="Syanten >0?'摸':'待ち'"
                   data-index="mo"
                 >
-                  <template #default="{text:mo,Records}">
+                  <template #default="{text:mo,record}">
                     <a><span
                       v-for="(tile,index) in mo"
                       :key="tile"
                       class="tiles"
-                      @click="discard(Records,index)"
+                      @click="discard(record,index)"
                     >{{ tile }}</span></a>
                   </template>
                 </a-table-column>
