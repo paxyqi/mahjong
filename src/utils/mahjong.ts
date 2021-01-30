@@ -35,6 +35,7 @@ export function splitTiles (handCard:string):IHandCard {
 export function joinTiles (tiles:IHandCard):string {
   let handCard = '';
   for (const color in tiles) {
+    if (tiles[color as Color].length === 0) { continue; }
     handCard += tiles[color as Color].sort().join('') + color;
   }
   return handCard;
