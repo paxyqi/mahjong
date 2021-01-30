@@ -90,28 +90,25 @@
     </a-col>
   </a-row>
 </template>
-<script>
-import { Calc, hai2Img, splitTiles, joinTiles, checkInput } from '../utils/mahjong';
+<script lang="ts">
+import { Calc, checkInput, hai2Img, joinTiles, splitTiles } from '../utils/mahjong';
 import { message } from 'ant-design-vue';
+import { computed, ref } from 'vue';
 export default {
-  data () {
-    return {
-      handCards: '',
-      Syanten: 0,
-      calcRes: [],
-      inputed: false
-    };
-  },
-  methods: {
-    showCards () {
-      if (this.handCards.length <= 0 || !checkInput(this.handCards)) {
+  setup () {
+    const handCards = ref('');
+    const Syanten = ref(0);
+    const calcRes = ref([]);
+    const inputed = ref(false);
+    const showCards = () => {
+      if (handCards.value.length <= 0 || !checkInput(handCards.value)) {
         message.error('無効入力');
         return;
       }
       // ==========================
       // API的返回值即为map
-      const { syanten, kariyou } = Calc(this.handCards);
-      this.Syanten = syanten;
+      const { syanten, kariyou } = Calc(handCards.value);
+      Syanten.value = syanten;
       const imgs = [];
       kariyou.forEach((value, key) => {
         imgs.push({
@@ -121,23 +118,30 @@ export default {
           moRaw: value
         });
       });
-      this.calcRes = imgs;
-      this.inputed = true;
-    },
-    discard (record, index) {
+      calcRes.value = imgs;
+      inputed.value = true;
+    };
+    const discard = (record, index) => {
       const da = record.daRaw;
       const mo = record.moRaw[index];
-      const modoTehai = splitTiles(this.handCards);
+      const modoTehai = splitTiles(handCards.value);
       modoTehai[da[1]] = modoTehai[da[1]].filter(item => item !== da[0]);
       modoTehai[mo[1]].push(mo[0]);
-      this.handCards = joinTiles(modoTehai);
-      this.showCards();
-    }
-  },
-  computed: {
-    handCardsImg () {
-      return hai2Img(this.handCards);
-    }
+      handCards.value = joinTiles(modoTehai);
+      showCards();
+    };
+    const handCardsImg = computed(() => {
+      return hai2Img(handCards.value);
+    });
+    return {
+      handCards,
+      Syanten,
+      calcRes,
+      inputed,
+      showCards,
+      discard,
+      handCardsImg
+    };
   }
 };
 </script>

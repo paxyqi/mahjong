@@ -71,9 +71,8 @@ html {
   justify-content: center;
 }
 </style>
-<script>
+<script lang='ts' setup>
 import Home from './components/Home.vue';
-
 export default {
   name: 'App',
   components: {
