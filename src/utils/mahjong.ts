@@ -81,6 +81,9 @@ function syanten (t:number[][]) { // 24m1556p2459s4572z syanten = 8-2*mentsu-tat
   let tatsu = 0;
   let alone = 0;
   const furo = 0; // 面子，搭子,单张，副露
+  let quetou1 = false; // 第一种计算情况下是否已经有雀头，如11s
+  let quetou2 = false; // 第二种计算情况下是否有雀头
+  let quetou = false;
   const search = (arr:number[], isJihai = false) => {
     let tmp1 = [0, 0, 0];
     let tmp2 = [0, 0, 0];
@@ -123,6 +126,7 @@ function syanten (t:number[][]) { // 24m1556p2459s4572z syanten = 8-2*mentsu-tat
       } else if (arr1[i] === 2) {
         arr1[i] -= 2;
         tmpTatsu++; // 两个一万 搭子
+        quetou1 = true;
         continue;
       } else {
         if (isJihai) continue;
@@ -174,6 +178,7 @@ function syanten (t:number[][]) { // 24m1556p2459s4572z syanten = 8-2*mentsu-tat
       if (arr2[i] === 2) {
         arr2[i] -= 2;
         tmpTatsu++;
+        quetou2 = true;
       }
       if (isJihai) {
         continue;
@@ -200,11 +205,23 @@ function syanten (t:number[][]) { // 24m1556p2459s4572z syanten = 8-2*mentsu-tat
     tmp2 = [tmpMentsu, tmpTatsu, tmpAlone];
 
     const tmp = tmp1 >= tmp2 ? tmp1 : tmp2;
+    if (quetou === false) {
+      quetou = tmp1 >= tmp2 ? quetou1 : quetou2; // 根据最后选择的方案确定是否有雀头
+    }
+
     mentsu += tmp[0];
     tatsu += tmp[1];
     alone += tmp[2];
-  };
-  const calc = () => {
+    if (mentsu + tatsu > 4) { // 搭子溢出
+      if (quetou) {
+        // 不拆,胡了
+      } else {
+        tatsu--;
+        alone += 2;
+      }
+    }
+  };// search
+  const calc = () => { // bug:6m67p22456888s666z syanten should be 0, but now is 1
     let tmpRes = -1;
     while (mentsu < 4 - furo) {
       // 此处副露为已经成面子的面子数
@@ -230,7 +247,7 @@ function syanten (t:number[][]) { // 24m1556p2459s4572z syanten = 8-2*mentsu-tat
         tmpRes += 2;
       }
     }
-    if (alone > 0) tmpRes++;
+    if (alone > 0) tmpRes++; // 当剩下的两张为单张的时候，此时不构成雀头。未胡牌
     res = tmpRes < res ? tmpRes : res;
     mentsu = tatsu = alone = 0;
   };
