@@ -1,9 +1,12 @@
 interface IHandCard{
-  p:string[],m:string[],s:string[],z:string[]
+  p:string[],
+  m:string[],
+  s:string[],
+  z:string[]
 }
-type Card = {i:number,j:number};
-type Color = keyof IHandCard;
-export function splitTiles (handCard:string) {
+type Card = { i:number, j:number};
+export type Color = keyof IHandCard;
+export function splitTiles (handCard:string):IHandCard {
   const result:IHandCard = {
     p: [],
     m: [],
@@ -12,23 +15,23 @@ export function splitTiles (handCard:string) {
   };
   let rest = handCard;
   while (rest.length > 0) {
-    const colored = rest.match(/[0-9]*[spzm]/)
-    if(colored===null){
-      throw 'invaild input';
-    }else{
-    const matchStr = colored[0];
-    result[(matchStr[matchStr.length - 1]) as Color] = result[(matchStr[matchStr.length - 1]) as Color].concat(matchStr
-      .substr(0, matchStr.length - 1)
-      .split(''));
-    rest =
+    const colored = rest.match(/[0-9]*[spzm]/);
+    if (colored === null) {
+      throw Error('invaild input');
+    } else {
+      const matchStr = colored[0];
+      result[(matchStr[matchStr.length - 1]) as Color] = result[(matchStr[matchStr.length - 1]) as Color].concat(matchStr
+        .substr(0, matchStr.length - 1)
+        .split(''));
+      rest =
       rest.substr(0, colored.index) +
-      rest.substr(colored.index! + matchStr.length);
+      rest.substr(colored.index as number + matchStr.length);
+    }
   }
-}
   return result;
 }
 
-export function joinTiles (tiles:IHandCard) {
+export function joinTiles (tiles:IHandCard):string {
   let handCard = '';
   for (const color in tiles) {
     handCard += tiles[color as Color].sort().join('') + color;
@@ -237,7 +240,7 @@ function syanten (t:number[][]) { // 24m1556p2459s4572z syanten = 8-2*mentsu-tat
   calc();
 
   return res;
-};
+}
 function syanten7 (haiArr:number[][]) { // 七对子
   const cnt = haiArr[0].reduce((a, b) => a + b) + haiArr[1].reduce((a, b) => a + b) + haiArr[2].reduce((a, b) => a + b) + haiArr[3].reduce((a, b) => a + b);
   if (cnt < 13 || cnt > 14) { return -2; } // 相公
@@ -248,7 +251,7 @@ function syanten7 (haiArr:number[][]) { // 七对子
     if (arr[i] === 1) t++;
   }
   if (s + t >= 7) { return 6 - s; } else { return 6 - s + (7 - s - t); }
-};
+}
 function syanten13 (haiArr:number[][]) { // 国士无双
   const cnt = haiArr[0].reduce((a, b) => a + b) + haiArr[1].reduce((a, b) => a + b) + haiArr[2].reduce((a, b) => a + b) + haiArr[3].reduce((a, b) => a + b);
   if (cnt < 13 || cnt > 14) { return -2; }
@@ -259,7 +262,7 @@ function syanten13 (haiArr:number[][]) { // 国士无双
     if (arr[i] > 1) t = 1;
   }
   return 13 - s - t;
-};
+}
 
 function syantenAll (haiArr:number[][]) {
   const s7 = syanten7(haiArr);
@@ -278,7 +281,7 @@ function improve (arr:number[][]) {
     }
   }
   return ret;
-};
+}
 // 打掉arr[i][j]的牌，用其他牌替换---共有33种替换的可能？剪枝？挨个试吧？
 function exchange (arr:number[][], i:number, j:number):Card[] {
   const preSyanten = syantenAll(arr);
@@ -297,7 +300,7 @@ function exchange (arr:number[][], i:number, j:number):Card[] {
   }
   arr[i][j]++;
   return res;
-};
+}
 
 function findCard (arr:number[][]):Card[] { // 将mpsz的二维数组转换成{i:,j:}
   const oneDimensionArr:Card[] = [];
@@ -310,20 +313,20 @@ function findCard (arr:number[][]):Card[] { // 将mpsz的二维数组转换成{i
     }
   }
   return oneDimensionArr;
-};
+}
 
-export function Calc (rawData:string) { // 输入为input框获得的原始数据，
+export function Calc (rawData:string):{syanten:number, kairyou:Map<string, string[]>} { // 输入为input框获得的原始数据，
   const arr = transTiles2Arr(splitTiles(rawData)); // 获取数据转换得到的arr
   const syantenRes = syantenAll(arr); // 计算当前手牌向听数
   const improveRes = improve(arr); // 获取改良[{i:,j:}]
   const cards = findCard(arr);
   const mapKariyouRes = mapKariyou(cards, improveRes);
-  const returnStruct = { syanten: syantenRes, kariyou: mapKariyouRes };
+  const returnStruct = { syanten: syantenRes, kairyou: mapKariyouRes };
   return returnStruct;
-};
+}
 function transIJ2Name (Cards:Card[]) { // 将形如[{i:1,j:2},{i:2,j:2}]的数组转化为3p 3s
   const res = [];// 返回一维数组如 3p，3s，1z
-  let curr = ''; 
+  let curr = '';
   for (let n = 0; n < Cards.length; n++) {
     if (Cards[n].i === 0) { // 花色为m
       curr = (++Cards[n].j) + 'm';
@@ -343,9 +346,9 @@ function transIJ2Name (Cards:Card[]) { // 将形如[{i:1,j:2},{i:2,j:2}]的数�
     }
   }
   return res;
-};
+}
 function mapKariyou (cards:Card[], improveRes:Card[][]) {
-  const res:Map<string,string[]> = new Map();
+  const res:Map<string, string[]> = new Map();
   const cardsName = transIJ2Name(cards);
   let transName = [];
   for (let n = 0; n < improveRes.length; n++) {
@@ -357,7 +360,7 @@ function mapKariyou (cards:Card[], improveRes:Card[][]) {
   return res;
 }
 
-export function hai2Img (hai:string) {
+export function hai2Img (hai:string):string[] {
   try {
     const splited = splitTiles(hai.replace(/0/, '5'));
     const result = [];
@@ -370,7 +373,7 @@ export function hai2Img (hai:string) {
   }
 }
 
-export function checkInput (tehai:string) {
+export function checkInput (tehai:string):boolean {
   try {
     const splited = splitTiles(tehai.replace(/0/, '5'));
     const sum = splited.m.length + splited.p.length + splited.s.length + splited.z.length;

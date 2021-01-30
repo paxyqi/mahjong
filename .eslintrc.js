@@ -4,19 +4,26 @@ module.exports = {
     es6: true
   },
   extends: [
-    'plugin:vue/essential',
-    'standard'
+    'plugin:vue/vue3-essential',
+    'plugin:vue/base',
+    'standard',
+    'plugin:@typescript-eslint/recommended',
+    '@vue/standard',
+    'plugin:vue/vue3-recommended'
   ],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly'
   },
+  parser: 'vue-eslint-parser',
   parserOptions: {
     ecmaVersion: 2018,
-    sourceType: 'module'
+    sourceType: 'module',
+    parser: '@typescript-eslint/parser'
   },
   plugins: [
-    'vue'
+    'vue',
+    '@typescript-eslint'
   ],
   rules: {
     semi: [
