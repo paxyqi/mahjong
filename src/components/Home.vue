@@ -128,12 +128,13 @@ export default {
       inputed.value = true;
     };
     const discard = (record:Records, index:number) => {
+      // record中da为待切牌IMG，daRaw为‘2w’；mo为待摸牌IMG，moRAW为'4m','1p'... index表示是打的牌当中的第几个
       const da = record.daRaw;
-      const mo = record.moRaw[index];
-      const modoTehai = splitTiles(handCards.value);
-      modoTehai[da[1] as Color].splice(modoTehai[da[1] as Color].findIndex(item => item === da[0]), 1);
-      modoTehai[mo[1] as Color].push(mo[0]);
-      handCards.value = joinTiles(modoTehai);
+      const mo = record.moRaw[index]; // 摸到的那张牌
+      const modoTehai = splitTiles(handCards.value); // modo为对原始手牌数据进行模式化，变为2维数组
+      modoTehai[da[1] as Color].splice(modoTehai[da[1] as Color].findIndex(item => item === da[0]), 1); // 删除打掉的牌
+      modoTehai[mo[1] as Color].push(mo[0]); // push摸入的牌
+      handCards.value = joinTiles(modoTehai); // 重新给handCards赋值，然后再次调用show
       showCards();
     };
     const handCardsImg = computed(() => {
