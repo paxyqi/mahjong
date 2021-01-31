@@ -81,9 +81,9 @@ function syanten (t:number[][]) { // 24m1556p2459s4572z syanten = 8-2*mentsu-tat
   let tatsu = 0;
   let alone = 0;
   const furo = 0; // 面子，搭子,单张，副露
-  let jyantou1 = false; // 第一种计算情况下是否已经有雀头，如11s
-  let jyantou2 = false; // 第二种计算情况下是否有雀头
-  let jyantou = false;
+  let quetou1 = false; // 第一种计算情况下是否已经有雀头，如11s
+  let quetou2 = false; // 第二种计算情况下是否有雀头
+  let quetou = false;
   const search = (arr:number[], isJihai = false) => {
     let tmp1 = [0, 0, 0];
     let tmp2 = [0, 0, 0];
@@ -126,7 +126,7 @@ function syanten (t:number[][]) { // 24m1556p2459s4572z syanten = 8-2*mentsu-tat
       } else if (arr1[i] === 2) {
         arr1[i] -= 2;
         tmpTatsu++; // 两个一万 搭子
-        jyantou1 = true;
+        quetou1 = true;
         continue;
       } else {
         if (isJihai) continue;
@@ -178,7 +178,7 @@ function syanten (t:number[][]) { // 24m1556p2459s4572z syanten = 8-2*mentsu-tat
       if (arr2[i] === 2) {
         arr2[i] -= 2;
         tmpTatsu++;
-        jyantou2 = true;
+        quetou2 = true;
       }
       if (isJihai) {
         continue;
@@ -202,19 +202,18 @@ function syanten (t:number[][]) { // 24m1556p2459s4572z syanten = 8-2*mentsu-tat
       }
     }
     tmpAlone += arr2.reduce((a, b) => a + b);
-    
     tmp2 = [tmpMentsu, tmpTatsu, tmpAlone];
 
     const tmp = tmp1 >= tmp2 ? tmp1 : tmp2;
-    if (jyantou === false) {
-      jyantou = tmp1 >= tmp2 ? jyantou1 : jyantou2; // 根据最后选择的方案确定是否有雀头
+    if (quetou === false) {
+      quetou = tmp1 >= tmp2 ? quetou1 : quetou2; // 根据最后选择的方案确定是否有雀头
     }
 
     mentsu += tmp[0];
     tatsu += tmp[1];
     alone += tmp[2];
     if (mentsu + tatsu > 4) { // 搭子溢出
-      if (jyantou) {
+      if (quetou) {
         // 不拆,胡了
       } else {
         tatsu--;
