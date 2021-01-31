@@ -131,7 +131,7 @@ export default {
       const da = record.daRaw;
       const mo = record.moRaw[index];
       const modoTehai = splitTiles(handCards.value);
-      modoTehai[da[1] as Color] = modoTehai[da[1] as Color].filter(item => item !== da[0]);
+      modoTehai[da[1] as Color].splice(modoTehai[da[1] as Color].findIndex(item => item === da[0]), 1);
       modoTehai[mo[1] as Color].push(mo[0]);
       handCards.value = joinTiles(modoTehai);
       showCards();
