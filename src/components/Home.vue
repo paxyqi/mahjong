@@ -16,6 +16,7 @@
                   v-model:value="handCards"
                   placeholder="手牌"
                   size="large"
+                  @change="inputed=false"
                   @search="showCards"
                 >
                   <template #enterButton>

@@ -202,7 +202,6 @@ function syanten (t:number[][]) { // 24m1556p2459s4572z syanten = 8-2*mentsu-tat
       }
     }
     tmpAlone += arr2.reduce((a, b) => a + b);
-    
     tmp2 = [tmpMentsu, tmpTatsu, tmpAlone];
 
     const tmp = tmp1 >= tmp2 ? tmp1 : tmp2;
