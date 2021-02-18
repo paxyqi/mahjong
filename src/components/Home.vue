@@ -88,6 +88,14 @@
                     >{{ tile }}</span></a>
                   </template>
                 </a-table-column>
+                <a-table-column
+                  key="rest"
+                  title="剩余"
+                >
+                  <template #default="{text:rest}">
+                    <span class="tiles">{{ rest }}</span>
+                  </template>
+                </a-table-column>
               </a-table-column-group>
             </a-table>
           </a-col>
@@ -105,6 +113,7 @@ export default {
   setup ():Record<string, Ref|ComputedRef|CallableFunction> {
     const handCards = ref('');
     const Syanten = ref(0);
+    const Rest:Ref = ref([]);
     const calcRes:Ref<Records[]> = ref([]);
     const inputed = ref(false);
     const showCards = () => {
@@ -114,8 +123,9 @@ export default {
       }
       // ==========================
       // API的返回值即为map
-      const { syanten, kairyou } = Calc(handCards.value);
+      const { syanten, kairyou, rest } = Calc(handCards.value);
       Syanten.value = syanten;
+      Rest.value = rest;
       const imgs:{da:string, daRaw:string, mo:string[], moRaw:string[]}[] = [];
       kairyou.forEach((value, key) => {
         imgs.push({

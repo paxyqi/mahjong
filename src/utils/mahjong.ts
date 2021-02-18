@@ -6,7 +6,8 @@ interface IHandCard{
 }
 type Card = { i:number, j:number};
 export type Color = keyof IHandCard;
-type ResultStructure = {syanten:number, kairyou:Map<string, string[]>};
+type ResultStructure = {syanten:number, kairyou:Map<string, string[]>, rest:number[]};
+// type sortMapStruct = {restCards:number[], sortKariyou:Map<string, string[]>};
 export function splitTiles (handCard:string):IHandCard {
   const result:IHandCard = {
     p: [],
@@ -81,9 +82,9 @@ function syanten (t:number[][]) { // 24m1556p2459s4572z syanten = 8-2*mentsu-tat
   let tatsu = 0;
   let alone = 0;
   const furo = 0; // 面子，搭子,单张，副露
-  let jyantou1 = false; // 第一种计算情况下是否已经有雀头，如11s
-  let jyantou2 = false; // 第二种计算情况下是否有雀头
-  let jyantou = false;
+  let quetou1 = false; // 第一种计算情况下是否已经有雀头，如11s
+  let quetou2 = false; // 第二种计算情况下是否有雀头
+  let quetou = false;
   const search = (arr:number[], isJihai = false) => {
     let tmp1 = [0, 0, 0];
     let tmp2 = [0, 0, 0];
@@ -126,7 +127,7 @@ function syanten (t:number[][]) { // 24m1556p2459s4572z syanten = 8-2*mentsu-tat
       } else if (arr1[i] === 2) {
         arr1[i] -= 2;
         tmpTatsu++; // 两个一万 搭子
-        jyantou1 = true;
+        quetou1 = true;
         continue;
       } else {
         if (isJihai) continue;
@@ -178,7 +179,7 @@ function syanten (t:number[][]) { // 24m1556p2459s4572z syanten = 8-2*mentsu-tat
       if (arr2[i] === 2) {
         arr2[i] -= 2;
         tmpTatsu++;
-        jyantou2 = true;
+        quetou2 = true;
       }
       if (isJihai) {
         continue;
@@ -205,15 +206,15 @@ function syanten (t:number[][]) { // 24m1556p2459s4572z syanten = 8-2*mentsu-tat
     tmp2 = [tmpMentsu, tmpTatsu, tmpAlone];
 
     const tmp = tmp1 >= tmp2 ? tmp1 : tmp2;
-    if (jyantou === false) {
-      jyantou = tmp1 >= tmp2 ? jyantou1 : jyantou2; // 根据最后选择的方案确定是否有雀头
+    if (quetou === false) {
+      quetou = tmp1 >= tmp2 ? quetou1 : quetou2; // 根据最后选择的方案确定是否有雀头
     }
 
     mentsu += tmp[0];
     tatsu += tmp[1];
     alone += tmp[2];
     if (mentsu + tatsu > 4) { // 搭子溢出
-      if (jyantou) {
+      if (quetou) {
         // 不拆,胡了
       } else {
         tatsu--;
@@ -340,8 +341,24 @@ export function Calc (rawData:string): ResultStructure { // 输入为input框获
   const improveRes = improve(arr); // 获取改良[{i:,j:}]
   const cards = findCard(arr);
   const mapKariyouRes = mapKariyou(cards, improveRes);
-  const returnStruct:ResultStructure = { syanten: syantenRes, kairyou: mapKariyouRes };
+  const restCards = calcMap(mapKariyouRes);
+  // const newMap = sortMap(mapKariyouRes, restCards);
+  const returnStruct:ResultStructure = { syanten: syantenRes, kairyou: mapKariyouRes, rest: restCards };
   return returnStruct;
+}
+// function sortMap (mapKariyou:Map<string, string[]>, restCards:number[]) {}
+function calcMap (mapKariyou:Map<string, string[]>) {
+  // const sortMapKariyou = new Map();
+  const restCards:number[] = [];
+  for (const value of mapKariyou.values()) {
+    restCards.push(calcRestCards(value));
+  }
+  return restCards;
+}
+function calcRestCards (arr:string[]) { // ['3m', '1p', '2p', '3p', '4p', '7p', '1s', '2s', '3s', '4s', '5s', '6s', '7s', '8s', '9s', '2z', '4z', '5z', '7z']
+  // 每一张牌正常应有4张剩余，应当减去当前手牌中的这张牌 考虑：无论当前手牌如何，直接减去13是否合理？
+  const rest = arr.length * 4 - 13;
+  return rest;
 }
 function transIJ2Name (Cards:Card[]) { // 将形如[{i:1,j:2},{i:2,j:2}]的数组转化为3p 3s
   const res = [];// 返回一维数组如 3p，3s，1z
