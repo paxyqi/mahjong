@@ -89,11 +89,12 @@
                   </template>
                 </a-table-column>
                 <a-table-column
-                  key="rest"
+                  key="restCard"
+                  data-index="restCard"
                   title="剩余"
                 >
-                  <template #default="{text:rest}">
-                    <span class="tiles">{{ rest }}</span>
+                  <template #default="{text:restCard}">
+                    <span class="tiles">{{ restCard }}</span>
                   </template>
                 </a-table-column>
               </a-table-column-group>
@@ -108,7 +109,7 @@
 import { Calc, checkInput, Color, hai2Img, joinTiles, splitTiles } from '../utils/mahjong';
 import { message } from 'ant-design-vue';
 import { computed, ComputedRef, ref, Ref } from 'vue';
-type Records = {da:string, daRaw:string, mo:string[], moRaw:string[]}
+type Records = {da:string, daRaw:string, mo:string[], moRaw:string[]};
 export default {
   setup ():Record<string, Ref|ComputedRef|CallableFunction> {
     const handCards = ref('');
@@ -126,14 +127,17 @@ export default {
       const { syanten, kairyou, rest } = Calc(handCards.value);
       Syanten.value = syanten;
       Rest.value = rest;
-      const imgs:{da:string, daRaw:string, mo:string[], moRaw:string[]}[] = [];
+      const imgs:{da:string, daRaw:string, mo:string[], moRaw:string[], restCard:number}[] = [];
+      let i = 0;
       kairyou.forEach((value, key) => {
         imgs.push({
           da: hai2Img(key)[0],
           daRaw: key,
           mo: value.map(hai2Img).map((arr) => arr[0]),
-          moRaw: value
+          moRaw: value,
+          restCard: Rest.value[i]
         });
+        i++;
       });
       calcRes.value = imgs;
       inputed.value = true;
