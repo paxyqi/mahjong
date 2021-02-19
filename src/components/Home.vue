@@ -85,7 +85,7 @@
                       :key="tile"
                       class="tiles"
                       @click="discard(record,index)"
-                    >{{ tile }}</span></a>（{{ record.restCard }}枚）
+                    >{{ tile }}</span></a>（{{ record.nokori }}枚）
                   </template>
                 </a-table-column>
               </a-table-column-group>
@@ -100,7 +100,7 @@
 import { Calc, checkInput, Color, hai2Img, joinTiles, splitTiles } from '../utils/mahjong';
 import { message } from 'ant-design-vue';
 import { computed, ComputedRef, ref, Ref } from 'vue';
-type Records = {da:string, daRaw:string, mo:string[], moRaw:string[]};
+type Records = {da:string, daRaw:string, mo:string[], moRaw:string[], nokori:number};
 export default {
   setup ():Record<string, Ref|ComputedRef|CallableFunction> {
     const handCards = ref('');
@@ -116,14 +116,14 @@ export default {
       // API的返回值即为map
       const { syanten, kairyou } = Calc(handCards.value);
       Syanten.value = syanten;
-      const imgs:{da:string, daRaw:string, mo:string[], moRaw:string[], restCard:number}[] = [];
+      const imgs:Records[] = [];
       kairyou.forEach((value, key) => {
         imgs.push({
           da: hai2Img(key)[0],
           daRaw: key,
           mo: value.mo.map(hai2Img).map((arr) => arr[0]),
           moRaw: value.mo,
-          restCard: value.rest
+          nokori: value.rest
         });
       });
       calcRes.value = imgs;
