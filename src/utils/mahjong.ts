@@ -341,23 +341,63 @@ export function Calc (rawData:string): ResultStructure { // 输入为input框获
   const improveRes = improve(arr); // 获取改良[{i:,j:}]
   const cards = findCard(arr);
   const mapKariyouRes = mapKariyou(cards, improveRes);
-  const restCards = calcMap(mapKariyouRes);
-  // const newMap = sortMap(mapKariyouRes, restCards);
+  const getCards = transArr2Card(arr);
+  const restCards = calcMap(mapKariyouRes, getCards);
   const returnStruct:ResultStructure = { syanten: syantenRes, kairyou: mapKariyouRes, rest: restCards };
   return returnStruct;
 }
-// function sortMap (mapKariyou:Map<string, string[]>, restCards:number[]) {}
-function calcMap (mapKariyou:Map<string, string[]>) {
+function calcMap (mapKariyou:Map<string, string[]>, cards:string[]) {
   // const sortMapKariyou = new Map();
   const restCards:number[] = [];
   for (const value of mapKariyou.values()) {
-    restCards.push(calcRestCards(value));
+    restCards.push(calcRestCards(value, cards));
   }
   return restCards;
 }
-function calcRestCards (arr:string[]) { // ['3m', '1p', '2p', '3p', '4p', '7p', '1s', '2s', '3s', '4s', '5s', '6s', '7s', '8s', '9s', '2z', '4z', '5z', '7z']
+function transArr2Card (arr:number[][]) { // 将二维数组转换为 1m，2m，...的字符串数组，用于比较
+  const Cards:string[] = [];
+  arr[0].forEach((num, index) => {
+    while (num > 0) {
+      const card = (index + 1) + 'm';
+      Cards.push(card);
+      num--;
+    }
+  });
+  arr[1].forEach((num, index) => {
+    while (num > 0) {
+      const card = (index + 1) + 'p';
+      Cards.push(card);
+      num--;
+    }
+  });
+  arr[2].forEach((num, index) => {
+    while (num > 0) {
+      const card = (index + 1) + 's';
+      Cards.push(card);
+      num--;
+    }
+  });
+  arr[3].forEach((num, index) => {
+    while (num > 0) {
+      const card = (index + 1) + 'z';
+      Cards.push(card);
+      num--;
+    }
+  });
+  return Cards;
+}
+function getArrEqual (arr1:string[], arr2:string[]) {
+  const newArr = [];
+  for (let i = 0; i < arr1.length; i++) {
+    for (let j = 0; j < arr2.length; j++) {
+      if (arr1[i] === arr2[j]) newArr.push(arr1[i]);
+    }
+  }
+  return newArr.length;
+}
+function calcRestCards (arr:string[], cards:string[]) { // ['3m', '1p', '2p', '3p', '4p', '7p', '1s', '2s', '3s', '4s', '5s', '6s', '7s', '8s', '9s', '2z', '4z', '5z', '7z']
   // 每一张牌正常应有4张剩余，应当减去当前手牌中的这张牌 考虑：无论当前手牌如何，直接减去13是否合理？
-  const rest = arr.length * 4 - 13;
+  const rest = arr.length * 4 - getArrEqual(arr, cards);
   return rest;
 }
 function transIJ2Name (Cards:Card[]) { // 将形如[{i:1,j:2},{i:2,j:2}]的数组转化为3p 3s
