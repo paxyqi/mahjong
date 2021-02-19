@@ -126,7 +126,7 @@ export default {
           nokori: value.rest
         });
       });
-      calcRes.value = imgs;
+      calcRes.value = imgs.sort((first, second) => second.nokori - first.nokori);
       inputed.value = true;
     };
     const discard = (record:Records, index:number) => {
