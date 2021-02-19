@@ -8,8 +8,6 @@
     "lint": "eslint . --ext .js,.vue,.ts"
   },
   "dependencies": {
-    "@babel/core": "*",
-    "@eslint/eslintrc": "^0.3.0",
     "ant-design-vue": "^2.0.0-rc.9",
     "vue": "^3.0.5"
   },
@@ -19,6 +17,7 @@
     "@vitejs/plugin-vue": "^1.1.2",
     "@vue/compiler-sfc": "^3.0.5",
     "eslint": "^7.18.0",
+    "@eslint/eslintrc": "^0.3.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
