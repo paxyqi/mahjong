@@ -351,26 +351,9 @@ function calcRestCards (arr:string[]) { // ['3m', '1p', '2p', '3p', '4p', '7p', 
   return rest;
 }
 function transIJ2Name (Cards:Card[]) { // 将形如[{i:1,j:2},{i:2,j:2}]的数组转化为3p 3s
-  const res = [];// 返回一维数组如 3p，3s，1z
-  let curr = '';
-  for (let n = 0; n < Cards.length; n++) {
-    if (Cards[n].i === 0) { // 花色为m
-      curr = (++Cards[n].j) + 'm';
-      res.push(curr);
-    }
-    if (Cards[n].i === 1) { // 花色为p
-      curr = (++Cards[n].j) + 'p';
-      res.push(curr);
-    }
-    if (Cards[n].i === 2) { // 花色为s
-      curr = (++Cards[n].j) + 's';
-      res.push(curr);
-    }
-    if (Cards[n].i === 3) { // 花色为z
-      curr = (++Cards[n].j) + 'z';
-      res.push(curr);
-    }
-  }
+  const res:string[] = [];// 返回一维数组如 3p，3s，1z
+  const color = ['m', 'p', 's', 'z'];
+  Cards.map(card => res.push((card.j + 1) + color[card.i]));
   return res;
 }
 function mapKariyou (cards:Card[], improveRes:Card[][]) {
