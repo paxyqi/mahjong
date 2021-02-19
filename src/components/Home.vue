@@ -85,16 +85,7 @@
                       :key="tile"
                       class="tiles"
                       @click="discard(record,index)"
-                    >{{ tile }}</span></a>
-                  </template>
-                </a-table-column>
-                <a-table-column
-                  key="restCard"
-                  data-index="restCard"
-                  title="剩余"
-                >
-                  <template #default="{text:restCard}">
-                    <span class="tiles">{{ restCard }}</span>
+                    >{{ tile }}</span></a>（{{ record.nokori }}枚）
                   </template>
                 </a-table-column>
               </a-table-column-group>
@@ -109,12 +100,11 @@
 import { Calc, checkInput, Color, hai2Img, joinTiles, splitTiles } from '../utils/mahjong';
 import { message } from 'ant-design-vue';
 import { computed, ComputedRef, ref, Ref } from 'vue';
-type Records = {da:string, daRaw:string, mo:string[], moRaw:string[]};
+type Records = {da:string, daRaw:string, mo:string[], moRaw:string[], nokori:number};
 export default {
   setup ():Record<string, Ref|ComputedRef|CallableFunction> {
     const handCards = ref('');
     const Syanten = ref(0);
-    const Rest:Ref = ref([]);
     const calcRes:Ref<Records[]> = ref([]);
     const inputed = ref(false);
     const showCards = () => {
@@ -124,22 +114,19 @@ export default {
       }
       // ==========================
       // API的返回值即为map
-      const { syanten, kairyou, rest } = Calc(handCards.value);
+      const { syanten, kairyou } = Calc(handCards.value);
       Syanten.value = syanten;
-      Rest.value = rest;
-      const imgs:{da:string, daRaw:string, mo:string[], moRaw:string[], restCard:number}[] = [];
-      let i = 0;
+      const imgs:Records[] = [];
       kairyou.forEach((value, key) => {
         imgs.push({
           da: hai2Img(key)[0],
           daRaw: key,
-          mo: value.map(hai2Img).map((arr) => arr[0]),
-          moRaw: value,
-          restCard: Rest.value[i]
+          mo: value.mo.map(hai2Img).map((arr) => arr[0]),
+          moRaw: value.mo,
+          nokori: value.rest
         });
-        i++;
       });
-      calcRes.value = imgs;
+      calcRes.value = imgs.sort((first, second) => second.nokori - first.nokori);
       inputed.value = true;
     };
     const discard = (record:Records, index:number) => {

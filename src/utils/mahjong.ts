@@ -6,7 +6,8 @@ interface IHandCard{
 }
 type Card = { i:number, j:number};
 export type Color = keyof IHandCard;
-type ResultStructure = {syanten:number, kairyou:Map<string, string[]>, rest:number[]};
+type Kairyou = { mo:string[], rest:number };
+type ResultStructure = {syanten:number, kairyou:Map<string, Kairyou>};
 // type sortMapStruct = {restCards:number[], sortKariyou:Map<string, string[]>};
 export function splitTiles (handCard:string):IHandCard {
   const result:IHandCard = {
@@ -341,56 +342,27 @@ export function Calc (rawData:string): ResultStructure { // 输入为input框获
   const improveRes = improve(arr); // 获取改良[{i:,j:}]
   const cards = findCard(arr);
   const mapKariyouRes = mapKariyou(cards, improveRes);
-  const restCards = calcMap(mapKariyouRes);
-  // const newMap = sortMap(mapKariyouRes, restCards);
-  const returnStruct:ResultStructure = { syanten: syantenRes, kairyou: mapKariyouRes, rest: restCards };
-  return returnStruct;
+  return { syanten: syantenRes, kairyou: mapKariyouRes };
 }
-// function sortMap (mapKariyou:Map<string, string[]>, restCards:number[]) {}
-function calcMap (mapKariyou:Map<string, string[]>) {
-  // const sortMapKariyou = new Map();
-  const restCards:number[] = [];
-  for (const value of mapKariyou.values()) {
-    restCards.push(calcRestCards(value));
-  }
-  return restCards;
-}
+
 function calcRestCards (arr:string[]) { // ['3m', '1p', '2p', '3p', '4p', '7p', '1s', '2s', '3s', '4s', '5s', '6s', '7s', '8s', '9s', '2z', '4z', '5z', '7z']
   // 每一张牌正常应有4张剩余，应当减去当前手牌中的这张牌 考虑：无论当前手牌如何，直接减去13是否合理？
   const rest = arr.length * 4 - 13;
   return rest;
 }
 function transIJ2Name (Cards:Card[]) { // 将形如[{i:1,j:2},{i:2,j:2}]的数组转化为3p 3s
-  const res = [];// 返回一维数组如 3p，3s，1z
-  let curr = '';
-  for (let n = 0; n < Cards.length; n++) {
-    if (Cards[n].i === 0) { // 花色为m
-      curr = (++Cards[n].j) + 'm';
-      res.push(curr);
-    }
-    if (Cards[n].i === 1) { // 花色为p
-      curr = (++Cards[n].j) + 'p';
-      res.push(curr);
-    }
-    if (Cards[n].i === 2) { // 花色为s
-      curr = (++Cards[n].j) + 's';
-      res.push(curr);
-    }
-    if (Cards[n].i === 3) { // 花色为z
-      curr = (++Cards[n].j) + 'z';
-      res.push(curr);
-    }
-  }
+  const res:string[] = [];// 返回一维数组如 3p，3s，1z
+  const color = ['m', 'p', 's', 'z'];
+  Cards.map(card => res.push((card.j + 1) + color[card.i]));
   return res;
 }
 function mapKariyou (cards:Card[], improveRes:Card[][]) {
-  const res:Map<string, string[]> = new Map();
+  const res:Map<string, Kairyou> = new Map();
   const cardsName = transIJ2Name(cards);
-  let transName = [];
   for (let n = 0; n < improveRes.length; n++) {
     if (improveRes[n].length > 0) { // n号有改良
-      transName = transIJ2Name(improveRes[n]);
-      res.set(cardsName[n], transName);
+      const transName = transIJ2Name(improveRes[n]);
+      res.set(cardsName[n], { mo: transName, rest: calcRestCards(transName) });
     }
   }
   return res;
