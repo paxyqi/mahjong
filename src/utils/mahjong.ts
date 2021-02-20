@@ -8,7 +8,6 @@ type Card = { i:number, j:number};
 export type Color = keyof IHandCard;
 type Kairyou = { mo:string[], rest:number };
 type ResultStructure = {syanten:number, kairyou:Map<string, Kairyou>};
-// type sortMapStruct = {restCards:number[], sortKariyou:Map<string, string[]>};
 export function splitTiles (handCard:string):IHandCard {
   const result:IHandCard = {
     p: [],
@@ -353,34 +352,44 @@ export function Calc (rawData:string): ResultStructure { // 输入为input框获
 // }
 function transArr2Card (arr:number[][]) { // 将二维数组转换为 1m，2m，...的字符串数组，用于比较
   const Cards:string[] = [];
-  arr[0].forEach((num, index) => {
-    while (num > 0) {
-      const card = (index + 1) + 'm';
-      Cards.push(card);
-      num--;
-    }
-  });
-  arr[1].forEach((num, index) => {
-    while (num > 0) {
-      const card = (index + 1) + 'p';
-      Cards.push(card);
-      num--;
-    }
-  });
-  arr[2].forEach((num, index) => {
-    while (num > 0) {
-      const card = (index + 1) + 's';
-      Cards.push(card);
-      num--;
-    }
-  });
-  arr[3].forEach((num, index) => {
-    while (num > 0) {
-      const card = (index + 1) + 'z';
-      Cards.push(card);
-      num--;
-    }
-  });
+  const color = ['m', 'p', 's', 'z'];
+  arr.map((rowCards, i) =>
+    rowCards.forEach((num, j) => {
+      let temp = num;
+      while (temp > 0) {
+        Cards.push((j + 1) + color[i]);
+        temp--;
+      }
+    })
+  );
+  // arr[0].forEach((num, index) => {
+  //   while (num > 0) {
+  //     const card = (index + 1) + 'm';
+  //     Cards.push(card);
+  //     num--;
+  //   }
+  // });
+  // arr[1].forEach((num, index) => {
+  //   while (num > 0) {
+  //     const card = (index + 1) + 'p';
+  //     Cards.push(card);
+  //     num--;
+  //   }
+  // });
+  // arr[2].forEach((num, index) => {
+  //   while (num > 0) {
+  //     const card = (index + 1) + 's';
+  //     Cards.push(card);
+  //     num--;
+  //   }
+  // });
+  // arr[3].forEach((num, index) => {
+  //   while (num > 0) {
+  //     const card = (index + 1) + 'z';
+  //     Cards.push(card);
+  //     num--;
+  //   }
+  // });
   return Cards;
 }
 function getArrEqual (arr1:string[], arr2:string[]) {
