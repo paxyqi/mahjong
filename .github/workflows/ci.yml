@@ -46,7 +46,7 @@ jobs:
           npm run lint
 
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@4.3.3
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           branch: gh-pages # 存放产物的分支名称
