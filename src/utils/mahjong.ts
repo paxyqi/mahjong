@@ -1,3 +1,4 @@
+
 interface IHandCard{
   p:string[],
   m:string[],
@@ -90,18 +91,21 @@ function syanten (t:number[][]) { // 24m1556p2459s4572z syanten = 8-2*mentsu-tat
     let tmp2 = [0, 0, 0];
 
     // 先算面子，再算顺子
+    // 6777888p在此处会出现bug，678算成了顺子，7788被留下了
     const arr1 = [...arr];
     let tmpMentsu = 0;
     let tmpTatsu = 0;
     let tmpAlone = 0;
+    // 先算面子 再算顺子
+    for (let i = 0; i < 9; i++) {
+      if (arr1[i] >= 3) {
+        arr1[i] -= 3;
+        tmpMentsu += 1;
+      }
+    }
     for (let i = 0; i < 9; i++) {
       if (arr1[i] === 0 || arr1[i] === undefined) {
         continue;
-      }
-      if (arr1[i] >= 3) {
-        // 三个一万
-        arr1[i] -= 3;
-        tmpMentsu++;
       }
       if (arr1[i] > 0) {
         // 考虑有1个顺子，或两个顺子
@@ -336,7 +340,7 @@ function findCard (arr:number[][]):Card[] { // 将mpsz的二维数组转换成{i
 }
 
 export function Calc (rawData:string): ResultStructure { // 输入为input框获得的原始数据，
-  const arr = transTiles2Arr(splitTiles(rawData)); // 获取数据转换得到的arr
+  const arr = checkIfNeedRandCard(transTiles2Arr(splitTiles(rawData))); // 获取数据转换得到的arr
   const syantenRes = syantenAll(arr); // 计算当前手牌向听数
   const improveRes = improve(arr); // 获取改良[{i:,j:}]
   const cards = findCard(arr);
@@ -446,4 +450,33 @@ export function checkInput (tehai:string):boolean {
   } catch (_) {
     return false;
   }
+}
+
+export let randCardExport:number[] = [4, 0];
+
+export function checkIfNeedRandCard (arr: number[][]) :number[][] {
+  let sum = 0;
+  let rand = false;
+  for (let i = 0; i < 4; i++) {
+    for (const data of arr[i]) {
+      sum += data;
+    }
+  }
+  if (sum === 13) { // 少一张牌才需要随机获得一张下轮手牌
+    while (!rand) {
+      const randCard = Math.round(Math.random() * 34);
+      const classic = Math.floor(randCard / 9);// 0-m 1-p 2-s 3-z
+      const bit = randCard - classic * 9;
+      randCardExport = [classic, bit];
+      if (arr[classic][bit] <= 3) {
+        arr[classic][bit]++;
+        rand = true;
+      } else {
+        continue;
+      }
+    }
+  } else {
+    randCardExport = [4, 0]; // 4，0表明不需要后加
+  }
+  return arr;
 }

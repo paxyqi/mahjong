@@ -60,9 +60,13 @@
               :scroll="{ y: 240 }"
             >
               <template #title>
-                <span>手牌：<span class="tiles">{{ handCardsImg.join("") }}</span>({{
-                  Syanten === -1? '和了' :(Syanten === 0 ? "聴牌" : `${Syanten}向聴`)
-                }})</span>
+                <span>手牌：
+                  <span class="tiles">{{ handCardsImg.join("") }}</span>
+                  <span
+                    v-if="randCard[0] !== 4"
+                  >抓牌：<span class="tiles">{{ randCardImg.join("") }}</span></span>({{
+                    Syanten === -1? '和了' :(Syanten === 0 ? "聴牌" : `${Syanten}向聴`)
+                  }})</span>
               </template>
               <a-table-column-group title="標準形(七対国士を含む)の計算結果:">
                 <a-table-column
@@ -97,7 +101,7 @@
   </a-row>
 </template>
 <script lang="ts">
-import { Calc, checkInput, Color, hai2Img, joinTiles, splitTiles } from '../utils/mahjong';
+import { Calc, checkInput, Color, hai2Img, joinTiles, splitTiles, randCardExport } from '../utils/mahjong';
 import { message } from 'ant-design-vue';
 import { computed, ComputedRef, ref, Ref } from 'vue';
 type Records = {da:string, daRaw:string, mo:string[], moRaw:string[], nokori:number};
@@ -107,6 +111,7 @@ export default {
     const Syanten = ref(0);
     const calcRes:Ref<Records[]> = ref([]);
     const inputed = ref(false);
+    const randCard:Ref<number[]> = ref([]);
     const showCards = () => {
       if (handCards.value.length <= 0 || !checkInput(handCards.value)) {
         message.error('無効入力');
@@ -128,6 +133,7 @@ export default {
       });
       calcRes.value = imgs.sort((first, second) => second.nokori - first.nokori);
       inputed.value = true;
+      randCard.value = randCardExport;
     };
     const discard = (record:Records, index:number) => {
       // record中da为待切牌IMG，daRaw为‘2w’；mo为待摸牌IMG，moRAW为'4m','1p'... index表示是打的牌当中的第几个
@@ -142,6 +148,22 @@ export default {
     const handCardsImg = computed(() => {
       return hai2Img(handCards.value);
     });
+    const randCardStr = computed(() => {
+      let classic = '';
+      if (randCard.value[0] === 0) {
+        classic = 'm';
+      } else if (randCard.value[0] === 1) {
+        classic = 'p';
+      } else if (randCard.value[0] === 2) {
+        classic = 's';
+      } else {
+        classic = 'z';
+      }
+      return randCard.value[1] + classic;
+    });
+    const randCardImg = computed(() => {
+      return hai2Img(randCardStr.value);
+    });
     return {
       handCards,
       Syanten,
@@ -149,7 +171,9 @@ export default {
       inputed,
       showCards,
       discard,
-      handCardsImg
+      handCardsImg,
+      randCard,
+      randCardImg
     };
   }
 };
