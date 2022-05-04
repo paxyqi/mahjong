@@ -61,10 +61,7 @@
             >
               <template #title>
                 <span>手牌：
-                  <span class="tiles">{{ handCardsImg.join("") }}</span>
-                  <span
-                    v-if="randCard[0] !== 4"
-                  >抓牌：<span class="tiles">{{ randCardImg.join("") }}</span></span>({{
+                  <span class="tiles">{{ handCardsImg.join("") }}</span>({{
                     Syanten === -1? '和了' :(Syanten === 0 ? "聴牌" : `${Syanten}向聴`)
                   }})</span>
               </template>
@@ -146,23 +143,25 @@ export default {
       showCards();
     };
     const handCardsImg = computed(() => {
-      return hai2Img(handCards.value);
-    });
-    const randCardStr = computed(() => {
-      let classic = '';
-      if (randCard.value[0] === 0) {
-        classic = 'm';
-      } else if (randCard.value[0] === 1) {
-        classic = 'p';
-      } else if (randCard.value[0] === 2) {
-        classic = 's';
-      } else {
-        classic = 'z';
-      }
-      return randCard.value[1] + classic;
-    });
-    const randCardImg = computed(() => {
-      return hai2Img(randCardStr.value);
+      const randCardStr = () => {
+        let classic = '';
+        if (randCard.value[0] === 0) {
+          classic = 'm';
+        } else if (randCard.value[0] === 1) {
+          classic = 'p';
+        } else if (randCard.value[0] === 2) {
+          classic = 's';
+        } else if (randCard.value[0] === 3) {
+          classic = 'z';
+        } else {
+          return '';
+        }
+        return (randCard.value[1] + 1) + classic;
+      };
+      console.log(randCardStr());
+      const addRandStr = handCards.value.concat(randCardStr());
+      console.log(addRandStr);
+      return hai2Img(addRandStr);
     });
     return {
       handCards,
@@ -172,8 +171,7 @@ export default {
       showCards,
       discard,
       handCardsImg,
-      randCard,
-      randCardImg
+      randCard
     };
   }
 };
