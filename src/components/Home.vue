@@ -161,6 +161,7 @@ export default {
       console.log(randCardStr());
       const addRandStr = handCards.value.concat(randCardStr());
       console.log(addRandStr);
+      console.log(hai2Img(addRandStr));
       return hai2Img(addRandStr);
     });
     return {

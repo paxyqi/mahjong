@@ -430,12 +430,27 @@ function mapKariyou (cards:Card[], improveRes:Card[][], arr:string[]) {
 
 export function hai2Img (hai:string):string[] {
   try {
-    const splited = splitTiles(hai.replace(/0/, '5'));
-    const result = [];
-    for (const key in splited) {
-      result.push(...(splited[key as Color].map(index => tilesImage[key as Color][parseInt(index) - 1])));
+    if (randCardExport[0] !== 4 && hai.length > 2) { // 有提供randCard则进入这种情况，并且在两个部分之间压入一个空格
+      const inputHandCards2Img = hai.slice(0, hai.length - 2);
+      const randCard2Img = hai.slice(hai.length - 2, hai.length);
+      const splitedHC = splitTiles(inputHandCards2Img.replace(/0/, '5'));
+      const result = [];
+      for (const key in splitedHC) {
+        result.push(...(splitedHC[key as Color].map(index => tilesImage[key as Color][parseInt(index) - 1])));
+      }
+      const splitedRC = splitTiles(randCard2Img.replace(/0/, '5'));
+      for (const key in splitedRC) {
+        result.push(...(splitedRC[key as Color].map(index => tilesImage[key as Color][parseInt(index) - 1])));
+      }
+      return result;
+    } else {
+      const splited = splitTiles(hai.replace(/0/, '5'));
+      const result = [];
+      for (const key in splited) {
+        result.push(...(splited[key as Color].map(index => tilesImage[key as Color][parseInt(index) - 1])));
+      }
+      return result;
     }
-    return result;
   } catch (_) {
     return [];
   }
@@ -453,7 +468,6 @@ export function checkInput (tehai:string):boolean {
 }
 
 export let randCardExport:number[] = [4, 0];
-
 export function checkIfNeedRandCard (arr: number[][]) :number[][] {
   let sum = 0;
   let rand = false;
